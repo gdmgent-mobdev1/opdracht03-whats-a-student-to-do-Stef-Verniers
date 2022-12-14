@@ -1,0 +1,12 @@
+:root {
+    font-size: 62.5%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#app {
+ background: linear-gradient(180deg, rgb(86, 151, 255) 24%, rgba(190, 90, 226, 0.808) 72%, rgba(251,196,216,1) 94%);    
+ min-height: 100vh;   
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+}

@@ -2,6 +2,7 @@
  * My Elements helper
  */
 const Elements = {
+
   createHeader({
     size = 1, textContent = '',
   }) {
@@ -9,6 +10,7 @@ const Elements = {
     header.textContent = textContent;
     return header;
   },
+
 };
 
 export default Elements;
