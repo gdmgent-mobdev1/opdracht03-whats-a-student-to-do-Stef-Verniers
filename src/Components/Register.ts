@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Component from '../lib/Component';
-import app from '../lib/firebase';
+import { app } from '../lib/firebase';
 // import Elements from '../lib/Elements';
 
-class LoginComponent extends Component {
+class RegisterComponent extends Component {
   constructor() {
     super({
-      name: 'login',
+      name: 'register',
       model: {},
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
-    const loginContainer = document.createElement('div');
-    loginContainer.innerHTML = `
+    const registerContainer = document.createElement('div');
+    registerContainer.innerHTML = `
     <h1>Opus</h1>
     <form id='login-form' class='login-form'>
       <label for='username' class='form-label'>Name</label>
@@ -24,8 +25,8 @@ class LoginComponent extends Component {
     </form>
     `;
 
-    return loginContainer;
+    return registerContainer;
   }
 }
 
-export default LoginComponent;
+export default RegisterComponent;

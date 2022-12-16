@@ -10,6 +10,8 @@ module.exports = {
     project: './tsconfig.json'
   },
   rules: {
-    'linebreak-style': 0
+    'linebreak-style': 0,  
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
   }
 }
