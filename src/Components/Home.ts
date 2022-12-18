@@ -15,7 +15,14 @@ class HomeComponent extends Component {
   render() {
     const homeContainer = document.createElement('div');
     homeContainer.innerHTML = `
-        <strong><h2>Home under construction</h2></strong>
+    <header>
+      <nav id="top-nav">
+          <ul id="top-nav-ul">
+              <li class="nav-li" id="nav-home">Home</li>
+              <li class="nav-li" id="nav-logout">Log out</li>
+          </ul>
+      </nav>
+    </header>
     `;
 
     return homeContainer;

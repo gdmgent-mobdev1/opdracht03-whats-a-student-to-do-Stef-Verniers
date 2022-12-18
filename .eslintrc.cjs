@@ -12,6 +12,7 @@ module.exports = {
   rules: {
     'linebreak-style': 0,  
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-multiple-empty-lines": [2, {"max": 99999, "maxEOF": 0}]
   }
 }

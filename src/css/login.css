@@ -9,7 +9,7 @@ div {
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
-    height: 45vh;
+    height: 55vh;
 }
 
 .login-form {
@@ -45,5 +45,15 @@ div {
     border-radius: 0.5rem;
     background-color: #A555EC;
     color: #fbeeff;
+}
 
+.secondary-button {
+    width: 100%;
+    padding: 1rem;
+    margin: 2rem 0 1rem 0;
+    border: none;
+    box-shadow: 0px 3px 18px rgb(218, 185, 223);
+    border-radius: 0.5rem;
+    border: solid 1px #A555EC;
+    color: #A555EC;
 }
