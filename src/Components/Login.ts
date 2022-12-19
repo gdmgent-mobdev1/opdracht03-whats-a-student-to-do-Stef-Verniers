@@ -21,7 +21,9 @@ class LoginComponent extends Component {
       <label for='password' class='form-label'>Password</label>
         <input type='password' class='form-input' name='password'></input>
       <button type='submit' id='login-button' class='primary-button'>Login</button>
+      <p>or</p>
       <button type='submit' id='login-google' class='secondary-button'>Login with Google</button>
+      <a href="/register"><p>Not registered yet? Click here to register</p></a>
     </form>
     `;
 

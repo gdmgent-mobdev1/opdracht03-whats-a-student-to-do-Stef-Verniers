@@ -15,13 +15,14 @@ class RegisterComponent extends Component {
   render() {
     const registerContainer = document.createElement('div');
     registerContainer.innerHTML = `
-    <h1>Opus</h1>
-    <form id='login-form' class='login-form'>
-      <label for='username' class='form-label'>Name</label>
+    <h1>Thanks for using Opus</h1>
+    <h2>Fill out this form and get started</h2>
+    <form id='register-form' class='login-form'>
+      <label for='username' class='form-label'>Email</label>
         <input type='text' class='form-input' name='username'></input>
       <label for='password' class='form-label'>Password</label>
         <input type='password' class='form-input' name='password'></input>
-      <button type='submit' id='login-button' class='primary-button'>Login</button>
+      <button type='submit' id='register-button' class='primary-button'>Register</button>
     </form>
     `;
 

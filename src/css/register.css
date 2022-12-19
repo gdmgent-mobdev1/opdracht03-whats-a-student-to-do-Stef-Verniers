@@ -3,6 +3,13 @@ h1 {
     font-weight: bold;
     color: #fde7ff;
     padding: 3rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #fde7ff;
+    margin: 0rem 0 4rem 0;
 }
 
 div {
@@ -11,11 +18,6 @@ div {
     align-items: center;
     flex-direction: column;
     height: fit-content;
-}
-
-p {
-    text-align: center;
-    font-size: 1.2rem;
 }
 
 .login-form {
@@ -51,15 +53,4 @@ p {
     border-radius: 0.5rem;
     background-color: #A555EC;
     color: #fbeeff;
-}
-
-.secondary-button {
-    width: 100%;
-    padding: 1rem;
-    margin: 2rem 0 2rem 0;
-    border: none;
-    box-shadow: 0px 3px 18px rgb(218, 185, 223);
-    border-radius: 0.5rem;
-    border: solid 1px #A555EC;
-    color: #A555EC;
 }

@@ -39,7 +39,6 @@ const registerUser = (e: any) => {
     .catch((error) => {
       console.log(error);
     });
-  window.location.reload();
 };
 
 const loginUser = (e: any) => {
@@ -50,8 +49,7 @@ const loginUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
-      sessionStorage.setItem('user', String(userCredential));
-    // ...
+      sessionStorage.setItem('user', String(user));
     })
     .catch((error) => {
       const errorCode = error.code;
