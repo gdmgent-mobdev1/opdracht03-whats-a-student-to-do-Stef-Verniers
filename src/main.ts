@@ -16,7 +16,6 @@ const appContainer = document.querySelector<HTMLDivElement>('#app')!;
 
 const check = sessionStorage.getItem('user');
 const registerPath = window.location.pathname;
-console.log(registerPath);
 
 if (check) {
   appContainer.appendChild(home.render());
@@ -26,10 +25,19 @@ if (check) {
   appContainer.appendChild(login.render());
 }
 
-
 userCred();
 
 window.addEventListener('DOMContentLoaded', () => {
+  const errorMessage = document.querySelector<HTMLParagraphElement>('.error')!;
+  const newError = sessionStorage.getItem('error');
+
+  if (newError) {
+    if (newError === 'Firebase: Error (auth/email-already-in-use).') {
+      errorMessage.innerHTML = 'There is already a user registered witht this email!';
+      errorMessage.classList.remove('hidden');
+    }
+  }
+
   const $loginButton = document.querySelector('#login-button');
   const $googleButton = document.querySelector('#login-google');
   const $registerButton = document.querySelector('#register-button');

@@ -12,3 +12,14 @@
  justify-content: space-evenly;
  position: relative;
 }
+
+.error {
+    color: rgb(255, 24, 24);
+    font-weight: bold;
+    text-align: left;
+    height: 3rem;
+}
+
+.hidden {
+    display: none;
+}

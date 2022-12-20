@@ -24,10 +24,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
+// Takes care of error handling
+const newError = sessionStorage.getItem('error');
 
 // Allows user to log in
 const registerUser = (e: any) => {
   e.preventDefault();
+  if (newError) {
+    sessionStorage.removeItem('error');
+  }
   const username = (<HTMLInputElement>document.querySelector('input[name="username"]'))!.value;
   const password = (<HTMLInputElement>document.querySelector('input[name="password"]'))!.value;
   createUserWithEmailAndPassword(auth, username, password)
@@ -35,9 +40,13 @@ const registerUser = (e: any) => {
     // Signed in
       const { user } = userCredential;
       console.log(user);
+      sessionStorage.setItem('user', String(user));
+      window.location.replace('/');
     })
     .catch((error) => {
-      console.log(error);
+      const errorMessage = error.message;
+      sessionStorage.setItem('error', String(errorMessage));
+      window.location.reload();
     });
 };
 

@@ -18,6 +18,7 @@ class RegisterComponent extends Component {
     <h1>Thanks for using Opus</h1>
     <h2>Fill out this form and get started</h2>
     <form id='register-form' class='login-form'>
+      <p class='error hidden'>Dit is een error</p> 
       <label for='username' class='form-label'>Email</label>
         <input type='text' class='form-input' name='username'></input>
       <label for='password' class='form-label'>Password</label>
