@@ -1,4 +1,4 @@
-h1 {
+#registerPage > h1 {
     font-size: 5rem;
     font-weight: bold;
     color: #fde7ff;
@@ -6,21 +6,21 @@ h1 {
     text-align: center;
 }
 
-h2 {
+div > h2 {
     font-size: 1.5rem;
     color: #fde7ff;
     margin: 0rem 0 4rem 0;
 }
 
-div {
+#registerPage {
+    height: 100vh;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: fit-content;
 }
 
-.login-form {
+.register-form {
     display: flex;
     flex-direction: column;
     background-color: #f6ebff;
@@ -28,8 +28,9 @@ div {
     border-radius: 0.5rem;
     height: fit-content;
     width: 70vw;
+    margin-bottom: 5rem;
 }
-.login-form > input {
+.register-form > input {
     margin-bottom: 2rem;
     height: 3rem;
     border: none;
@@ -38,16 +39,23 @@ div {
     padding-left: 1rem;
 }
 
-.login-form > label {
+.register-form > label {
     margin-bottom: 0.7rem;
     font-size: 1.3rem;
+}
+
+.register-form > a {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+
 }
 
 
 .primary-button {
     width: 100%;
     padding: 1rem;
-    margin: 2rem 0 2rem 0;
+    margin: 1rem 0 1rem 0;
     border: none;
     box-shadow: 0px 3px 18px rgb(218, 185, 223);
     border-radius: 0.5rem;

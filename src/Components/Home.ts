@@ -23,6 +23,24 @@ class HomeComponent extends Component {
           </ul>
       </nav>
     </header>
+    <main>
+      <div id="dashboard" class="dashboard">
+        <div class='dashboardUtils'>
+          <h3 id="dashboardName"></h3>
+          <span id="currentDate"></span>
+        </div>
+        <button id="editDashboard" class="secondary-button"></button>
+      </div>
+      <div id='dashboardEdits-form' class="editOpen">
+        <form id='dashboardEdits' class='edit-form'>
+          <div id='practicalDisplayname'>
+            <label for='displayname' class='form-label'>Username</label>
+            <input type='text' class='form-input' id="displaynameInput" name='displayname'></input>
+          </div>
+        </form>
+        <button id="confirmEdits" class="secondary-button">Save edits</button>
+      </div>
+    </main>
     `;
 
     return homeContainer;

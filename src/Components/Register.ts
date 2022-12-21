@@ -14,16 +14,18 @@ class RegisterComponent extends Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     const registerContainer = document.createElement('div');
+    registerContainer.setAttribute('id', 'registerPage');
     registerContainer.innerHTML = `
     <h1>Thanks for using Opus</h1>
     <h2>Fill out this form and get started</h2>
-    <form id='register-form' class='login-form'>
+    <form id='register-form' class='register-form'>
       <p class='error hidden'>Dit is een error</p> 
       <label for='username' class='form-label'>Email</label>
         <input type='text' class='form-input' name='username'></input>
       <label for='password' class='form-label'>Password</label>
         <input type='password' class='form-input' name='password'></input>
       <button type='submit' id='register-button' class='primary-button'>Register</button>
+      <a href="/"><p>Already have an account? Click here to log in</p></a>
     </form>
     `;
 

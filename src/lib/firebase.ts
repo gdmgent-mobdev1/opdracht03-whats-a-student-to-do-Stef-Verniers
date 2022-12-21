@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {
   getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider,
-  signInWithPopup, signInWithEmailAndPassword,
+  signInWithPopup, signInWithEmailAndPassword, updateProfile, User,
 } from '@firebase/auth';
 import { initializeApp } from 'firebase/app';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -59,6 +59,7 @@ const loginUser = (e: any) => {
     // Signed in
       const { user } = userCredential;
       sessionStorage.setItem('user', String(user));
+      window.location.reload();
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -72,18 +73,25 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
-      console.log(uid);
-      console.log(user);
-    } else {
-      console.log('not logged in');
+      const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashboardName');
+      const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
+      console.log(userPlaceholder);
+      if (user.displayName !== null) {
+        userPlaceholder!.innerHTML = `Welcome ${user.displayName}`;
+        displaynamePlaceholder!.setAttribute('value', `${user.displayName}`);
+      } else {
+        userPlaceholder!.innerHTML = `Welcome ${uid}`;
+        displaynamePlaceholder!.setAttribute('value', `${uid}`);
+        userPlaceholder!.style.fontSize = '1.6rem';
+      }
     }
   });
+  console.log('not logged in');
 };
 
-
-
 // Log in with Google
-const google = () => {
+const google = (e:any) => {
+  e.preventDefault();
   signInWithPopup(auth, googleProvider)
     .then((result: any) => {
     // This gives you a Google Access Token. You can use it to access the Google API.
@@ -91,9 +99,12 @@ const google = () => {
       const token = credential?.accessToken;
       // The signed-in user info.
       const { user } = result;
+      sessionStorage.setItem('user', String(user));
+      window.location.replace('/');
     // ...
     }).catch((error: any) => {
     // Handle Errors here.
+      // alert(error);
       const errorCode = error.code;
       const errorMessage = error.message;
       // The email of the user's account used.
@@ -102,6 +113,19 @@ const google = () => {
       const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
     });
+};
+
+const updateDashboard = (e:any) => {
+  const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput')?.value;
+  e.preventDefault();
+  updateProfile(auth.currentUser!, {
+    displayName: String(displaynamePlaceholder),
+    photoURL: null,
+  }).then(() => {
+    window.location.reload();
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 
 
@@ -113,6 +137,7 @@ const logoutUser = (e: any) => {
     .then(() => {
       sessionStorage.removeItem('user');
       console.log('signed out successful');
+      window.location.reload();
     })
     .catch((error) => {
       console.log(error);
@@ -120,5 +145,5 @@ const logoutUser = (e: any) => {
 };
 
 export {
-  app, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google,
+  app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
 };

@@ -13,6 +13,7 @@ class LoginComponent extends Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     const loginContainer = document.createElement('div');
+    loginContainer.setAttribute('id', 'loginPage');
     loginContainer.innerHTML = `
     <h1>Opus</h1>
     <form id='login-form' class='login-form'>
@@ -22,7 +23,7 @@ class LoginComponent extends Component {
         <input type='password' class='form-input' name='password'></input>
       <button type='submit' id='login-button' class='primary-button'>Login</button>
       <p>or</p>
-      <button type='submit' id='login-google' class='secondary-button'>Login with Google</button>
+      <button id='login-google' class='secondary-button'>Login with Google</button>
       <a href="/register"><p>Not registered yet? Click here to register</p></a>
     </form>
     `;
