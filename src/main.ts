@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import './css/reset.css';
 import './css/style.css';
 import './css/header.css';
@@ -7,7 +9,7 @@ import './css/home.css';
 
 import { LoginComponent, RegisterComponent, HomeComponent } from './Components';
 import {
-  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard,
+  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getData,
 } from './lib/firebase';
 import { showEditBlock, todaysDate } from './lib/functions';
 
@@ -37,17 +39,16 @@ const dashboardUpdateButton = document.querySelector<HTMLButtonElement>('#confir
 dashboardUpdateButton?.addEventListener('click', updateDashboard);
 // Renders out the current date in a specific layout
 const renderDate = document.querySelector<HTMLSpanElement>('#currentDate');
-renderDate!.innerHTML = `Today is ${todaysDate()}`;
+if (renderDate) renderDate.innerHTML = `Today is ${todaysDate()}`;
 // Shows the edit block for the username
 const editButton = document.querySelector<HTMLButtonElement>('#editDashboard');
 const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
 console.log(editBlock);
 editButton?.addEventListener('click', showEditBlock);
 
-/**
- * The active page
- */
 userCred();
+getData();
+
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {

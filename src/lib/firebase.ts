@@ -1,9 +1,18 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/brace-style */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-shadow */
 // Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
 import {
   getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider,
   signInWithPopup, signInWithEmailAndPassword, updateProfile, User,
 } from '@firebase/auth';
-import { initializeApp } from 'firebase/app';
+import {
+  doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
+} from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,6 +32,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const db = getFirestore();
 
 // Takes care of error handling
 const newError = sessionStorage.getItem('error');
@@ -73,6 +83,7 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
+      console.log(uid);
       const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashboardName');
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
       console.log(userPlaceholder);
@@ -144,6 +155,32 @@ const logoutUser = (e: any) => {
     });
 };
 
+/**
+ * FIRESTORE
+ */
+
+const getData = async () => {
+  const projects = query(collectionGroup(db, 'users'), where('email', '==', `stefverniers@gmail.com`));
+  const querySnapshot = await getDocs(projects);
+  const snapshot = await getCountFromServer(projects);
+  const amountProjects = snapshot.data().count;
+  // Returns the amount of current projects
+  const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
+  if (amountProjectsMessage) {
+    if (amountProjects === 0) {
+      amountProjectsMessage.innerHTML = `U heeft nog geen projecten lopen. Maak er snel 1 aan of accepteer een project-uitnodiging`;
+    } 
+    else if (amountProjects === 1) {
+      amountProjectsMessage.innerHTML = `U neemt deel aan ${amountProjects} project`;
+    } 
+    else if (amountProjects > 1) {
+      amountProjectsMessage.innerHTML = `U neemt deel aan ${amountProjects} projecten`;
+    }
+  }
+};
+
+
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
+  getData,
 };

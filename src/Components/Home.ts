@@ -40,6 +40,9 @@ class HomeComponent extends Component {
         </form>
         <button id="confirmEdits" class="secondary-button">Save edits</button>
       </div>
+      <div id='amountMessage'>
+        <h1 id='amountProjects'></h1>
+      </div>
     </main>
     `;
 
