@@ -9,9 +9,11 @@ import './css/home.css';
 
 import { LoginComponent, RegisterComponent, HomeComponent } from './Components';
 import {
-  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getData,
+  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects,
 } from './lib/firebase';
-import { showEditBlock, todaysDate } from './lib/functions';
+import {
+  createNewProject, hideEditBlock, showEditBlock, todaysDate,
+} from './lib/functions';
 
 // Consts about the app buildup
 const login = new LoginComponent();
@@ -41,14 +43,17 @@ dashboardUpdateButton?.addEventListener('click', updateDashboard);
 const renderDate = document.querySelector<HTMLSpanElement>('#currentDate');
 if (renderDate) renderDate.innerHTML = `Today is ${todaysDate()}`;
 // Shows the edit block for the username
-const editButton = document.querySelector<HTMLButtonElement>('#editDashboard');
+const editButton = document.querySelector<HTMLHeadElement>('#dashboardName');
 const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
+const editBlockCancel = document.querySelector<HTMLButtonElement>('#cancelEdits');
 console.log(editBlock);
 editButton?.addEventListener('click', showEditBlock);
+editBlockCancel!.addEventListener('click', hideEditBlock);
 
 userCred();
-getData();
-
+getAmountOfProjects();
+returnProjects();
+createNewProject();
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {

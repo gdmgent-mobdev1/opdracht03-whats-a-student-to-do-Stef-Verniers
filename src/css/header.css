@@ -24,4 +24,10 @@ header {
     align-items: center;
     font-size: 1.2rem;
     font-weight: 600;
+    cursor: pointer;
+}
+
+#dashboardName {
+    width: 70%;
+    color: #3456FF;
 }

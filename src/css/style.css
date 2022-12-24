@@ -2,7 +2,9 @@
 
 :root {
     font-size: 62.5%;
-    font-family: 'Titillium Web', sans-serif;}
+    font-family: 'Titillium Web', sans-serif;
+    box-sizing: border-box;
+}
 
 #app {
  background: linear-gradient(180deg, rgb(86, 151, 255) 24%, rgba(190, 90, 226, 0.808) 72%, rgba(251,196,216,1) 94%);    
@@ -24,3 +26,6 @@
     display: none;
 }
  
+button {
+    cursor: pointer;
+}

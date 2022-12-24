@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/brace-style */
 /* eslint-disable @typescript-eslint/quotes */
@@ -159,28 +160,50 @@ const logoutUser = (e: any) => {
  * FIRESTORE
  */
 
-const getData = async () => {
+const getAmountOfProjects = async () => {
   const projects = query(collectionGroup(db, 'users'), where('email', '==', `stefverniers@gmail.com`));
   const querySnapshot = await getDocs(projects);
   const snapshot = await getCountFromServer(projects);
   const amountProjects = snapshot.data().count;
-  // Returns the amount of current projects
+  // Returns the amount of current projects in a message
   const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
   if (amountProjectsMessage) {
     if (amountProjects === 0) {
       amountProjectsMessage.innerHTML = `U heeft nog geen projecten lopen. Maak er snel 1 aan of accepteer een project-uitnodiging`;
     } 
     else if (amountProjects === 1) {
-      amountProjectsMessage.innerHTML = `U neemt deel aan ${amountProjects} project`;
+      amountProjectsMessage.innerHTML = `You're taking part in ${amountProjects} project`;
     } 
     else if (amountProjects > 1) {
-      amountProjectsMessage.innerHTML = `U neemt deel aan ${amountProjects} projecten`;
+      amountProjectsMessage.innerHTML = `You're taking part in ${amountProjects} projects`;
     }
   }
 };
 
+const returnProjects = async () => {
+  const list = document.querySelector<HTMLDivElement>('#projectList');
+  const projects = query(collectionGroup(db, 'projects'));
+  const querySnapshot = await getDocs(projects);
+  querySnapshot.forEach((doc) => {
+    const deadline = doc.data().Deadline;
+    const fireBaseTime = new Date(
+      deadline.seconds * 1000 + deadline.nanoseconds / 1000000,
+    );
+    const formatOptions = {
+      format: 'dd MMM  yy', 
+    };
+    console.log(doc.id, '>', doc.data());
+    const newElement = document.createElement('div');
+    if (list) list.appendChild(newElement).setAttribute('class', 'projectCard');
+    newElement.innerHTML = `
+    <h4>${doc.id, doc.data().Name}</h4>
+    <p>${fireBaseTime.toLocaleDateString('eng-BE', formatOptions)}</p>
+    <span>3</span>
+    `; 
+  });
+};
 
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getData,
+  getAmountOfProjects, returnProjects,
 };

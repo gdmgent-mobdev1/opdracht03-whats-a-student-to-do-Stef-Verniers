@@ -3,13 +3,38 @@ const todaysDate = () => {
   return date;
 };
 
-const showEditBlock = () => {
+const showEditBlock = (e: any) => {
+  e.preventDefault();
   const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
-  if (editBlock?.classList.contains('open')) {
-    editBlock.classList.remove('open');
-  } else {
+  if (!editBlock?.classList.contains('open')) {
     editBlock?.classList.add('open');
   }
 };
 
-export { todaysDate, showEditBlock };
+const hideEditBlock = (e: any) => {
+  e.preventDefault();
+  const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
+  if (editBlock?.classList.contains('open')) {
+    editBlock.classList.remove('open');
+  }
+};
+
+const createNewProject = () => {
+  const open = document.querySelector<HTMLImageElement>('#newProject');
+  const modal = document.querySelector<HTMLDivElement>('#createProjectContainer');
+  const close = document.querySelector<HTMLImageElement>('#closeNewProjectForm');
+
+  open?.addEventListener('click', () => {
+    modal?.classList.add('show');
+  });
+
+  close?.addEventListener('click', () => {
+    modal?.classList.remove('show');
+    document.querySelector<HTMLFormElement>('#formCreateProject')?.reset();
+  });
+};
+
+
+export {
+  todaysDate, showEditBlock, hideEditBlock, createNewProject,
+};
