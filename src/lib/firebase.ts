@@ -13,6 +13,7 @@ import {
 } from '@firebase/auth';
 import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
+  writeBatch, Timestamp, setDoc, addDoc,
 } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -51,7 +52,7 @@ const registerUser = (e: any) => {
     // Signed in
       const { user } = userCredential;
       console.log(user);
-      sessionStorage.setItem('user', String(user));
+      sessionStorage.setItem('user', String(user.uid));
       window.location.replace('/');
     })
     .catch((error) => {
@@ -69,7 +70,7 @@ const loginUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
-      sessionStorage.setItem('user', String(user));
+      sessionStorage.setItem('user', String(user.uid));
       window.location.reload();
     })
     .catch((error) => {
@@ -89,8 +90,8 @@ const userCred = () => {
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
       console.log(userPlaceholder);
       if (user.displayName !== null) {
-        userPlaceholder!.innerHTML = `Welcome ${user.displayName}`;
-        displaynamePlaceholder!.setAttribute('value', `${user.displayName}`);
+        if (userPlaceholder) userPlaceholder.innerHTML = `Welcome ${user.displayName}`;
+        if (userPlaceholder) userPlaceholder.setAttribute('value', `${user.displayName}`);
       } else {
         userPlaceholder!.innerHTML = `Welcome ${uid}`;
         displaynamePlaceholder!.setAttribute('value', `${uid}`);
@@ -161,10 +162,15 @@ const logoutUser = (e: any) => {
  */
 
 const getAmountOfProjects = async () => {
-  const projects = query(collectionGroup(db, 'users'), where('email', '==', `stefverniers@gmail.com`));
+  const myUID = sessionStorage.getItem('user');
+  const projects = query(collectionGroup(db, 'users'), where('UID', '==', `${myUID}`));
   const querySnapshot = await getDocs(projects);
-  const snapshot = await getCountFromServer(projects);
-  const amountProjects = snapshot.data().count;
+  const snapshotProjects = await getCountFromServer(projects);
+  const amountProjects = snapshotProjects.data().count;
+  const snapshotUsers = await getCountFromServer(projects);
+  const amountUsers = snapshotUsers.data().count;
+  console.log(amountUsers);
+  console.log(amountProjects);
   // Returns the amount of current projects in a message
   const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
   if (amountProjectsMessage) {
@@ -203,7 +209,26 @@ const returnProjects = async () => {
   });
 };
 
+const createProject = async (e: any) => {
+  const newName = document.querySelector<HTMLInputElement>('#newName')?.value;
+  const newDate = document.querySelector<HTMLInputElement>('#newDate')?.value;
+  const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
+  const username = auth.currentUser?.displayName;
+  e.preventDefault();
+  const project = await setDoc(doc(db, 'projects', newName), {
+    Name: newName,
+    Deadline: Timestamp.fromDate(new Date(newDate)),
+    Description: newDescription,
+  });
+  const user = await addDoc(collection(db, 'projects', newName, 'users'), {
+    Name: auth.currentUser!.displayName,
+    UID: auth.currentUser!.uid,
+    Email: auth.currentUser!.email,
+  });
+  window.location.reload();
+};
+
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects,
+  getAmountOfProjects, returnProjects, createProject,
 };

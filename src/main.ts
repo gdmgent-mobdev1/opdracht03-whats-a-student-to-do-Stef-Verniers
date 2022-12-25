@@ -9,7 +9,7 @@ import './css/home.css';
 
 import { LoginComponent, RegisterComponent, HomeComponent } from './Components';
 import {
-  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects,
+  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject,
 } from './lib/firebase';
 import {
   createNewProject, hideEditBlock, showEditBlock, todaysDate,
@@ -36,6 +36,12 @@ if (check) {
  * The homepage
  */
 
+// Running functions
+userCred();
+getAmountOfProjects();
+returnProjects();
+createNewProject();
+
 // Saves a new username
 const dashboardUpdateButton = document.querySelector<HTMLButtonElement>('#confirmEdits');
 dashboardUpdateButton?.addEventListener('click', updateDashboard);
@@ -48,12 +54,12 @@ const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form')
 const editBlockCancel = document.querySelector<HTMLButtonElement>('#cancelEdits');
 console.log(editBlock);
 editButton?.addEventListener('click', showEditBlock);
-editBlockCancel!.addEventListener('click', hideEditBlock);
+editBlockCancel?.addEventListener('click', hideEditBlock);
+// Stores new project data to firestore
+const submitNewProject = document.querySelector<HTMLButtonElement>('#confirmNewProject');
+submitNewProject?.addEventListener('click', createProject);
 
-userCred();
-getAmountOfProjects();
-returnProjects();
-createNewProject();
+
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {

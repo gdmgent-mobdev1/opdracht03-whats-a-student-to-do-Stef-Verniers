@@ -55,11 +55,11 @@ class HomeComponent extends Component {
                     <img src='/src/img/close.svg' alt='Close this form' width='15vw' id='closeNewProjectForm'>
                   </div>
                   <label for='projectName' class='form-label'>Project name</label>
-                  <input type='text' class='form-input' name='projectName'></input>
+                  <input type='text' class='form-input' name='projectName' id='newName'></input>
                   <label for='projectDeadline' class='form-label'>Project deadline</label>
-                  <input type='date' class='form-input' name='projectDeadline'></input>
+                  <input type='date' class='form-input' name='projectDeadline' id='newDate'></input>
                   <label for='projectDescription' class='form-label'>Project description</label>
-                  <textarea type='text' class='form-input' name='projectDeadline' rows='4' cols="50"></textarea>
+                  <textarea type='text' class='form-input' name='projectDeadline' rows='4' cols="50" id='newDescription'></textarea>
                   <button id="confirmNewProject" class="primary-button">Create project</button>
                 </form>
             </div>
