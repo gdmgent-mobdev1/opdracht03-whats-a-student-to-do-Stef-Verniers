@@ -9,7 +9,7 @@ import './css/home.css';
 
 import { LoginComponent, RegisterComponent, HomeComponent } from './Components';
 import {
-  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject,
+  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject, showProjectInformation,
 } from './lib/firebase';
 import {
   createNewProject, hideEditBlock, showEditBlock, todaysDate,
@@ -59,7 +59,10 @@ editBlockCancel?.addEventListener('click', hideEditBlock);
 const submitNewProject = document.querySelector<HTMLButtonElement>('#confirmNewProject');
 submitNewProject?.addEventListener('click', createProject);
 
-
+// Shows project information
+const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
+console.log(showInfo);
+showInfo?.addEventListener('click', showProjectInformation);
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {

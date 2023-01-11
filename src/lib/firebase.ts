@@ -167,9 +167,6 @@ const getAmountOfProjects = async () => {
   const querySnapshot = await getDocs(projects);
   const snapshotProjects = await getCountFromServer(projects);
   const amountProjects = snapshotProjects.data().count;
-  const snapshotUsers = await getCountFromServer(projects);
-  const amountUsers = snapshotUsers.data().count;
-  console.log(amountUsers);
   console.log(amountProjects);
   // Returns the amount of current projects in a message
   const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
@@ -188,9 +185,12 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async () => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const projects = query(collectionGroup(db, 'projects'));
+  const myUID = sessionStorage.getItem('user');
+  
+  const projects = collection(db, 'projects');  
+
   const querySnapshot = await getDocs(projects);
-  querySnapshot.forEach((doc) => {
+  querySnapshot.forEach(async (doc) => {
     const deadline = doc.data().Deadline;
     const fireBaseTime = new Date(
       deadline.seconds * 1000 + deadline.nanoseconds / 1000000,
@@ -198,15 +198,26 @@ const returnProjects = async () => {
     const formatOptions = {
       format: 'dd MMM  yy', 
     };
-    console.log(doc.id, '>', doc.data());
+
     const newElement = document.createElement('div');
+
     if (list) list.appendChild(newElement).setAttribute('class', 'projectCard');
     newElement.innerHTML = `
     <h4>${doc.id, doc.data().Name}</h4>
     <p>${fireBaseTime.toLocaleDateString('eng-BE', formatOptions)}</p>
-    <span>3</span>
+    <div id='cardBottom'>
+      <div id='cardUsers'>
+        <img src='/src/img/user.svg' alt='Users' width='12vw' id='projectUsers'>
+        <span>3</span>
+      </div>
+      <img src='/src/img/info.svg' alt='Further information about this project' width='15vw' id='projectInfo'>
+    </div>
     `; 
   });
+};
+
+const showProjectInformation = () => {
+  console.log('this works');
 };
 
 const createProject = async (e: any) => {
@@ -230,5 +241,5 @@ const createProject = async (e: any) => {
 
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects, createProject,
+  getAmountOfProjects, returnProjects, createProject, showProjectInformation,
 };

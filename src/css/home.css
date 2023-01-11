@@ -168,11 +168,12 @@ textarea {
 }
 
 .projectCard > p {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
-.projectCard > span {
-    font-size: 1.3rem;
+#cardUsers > span {
+    font-size: 1.4rem;
+    margin-left: 10%;
 }
 
 #editButtonsList > button {
