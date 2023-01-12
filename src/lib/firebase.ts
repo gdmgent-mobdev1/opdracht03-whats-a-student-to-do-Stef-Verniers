@@ -13,7 +13,7 @@ import {
 } from '@firebase/auth';
 import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
-  writeBatch, Timestamp, setDoc, addDoc,
+  writeBatch, Timestamp, setDoc, addDoc, colRef
 } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -163,11 +163,11 @@ const logoutUser = (e: any) => {
 
 const getAmountOfProjects = async () => {
   const myUID = sessionStorage.getItem('user');
-  const projects = query(collectionGroup(db, 'users'), where('UID', '==', `${myUID}`));
-  const querySnapshot = await getDocs(projects);
+  const users = query(collectionGroup(db, 'users'), where('UID', '==', `${myUID}`));
+  const projects = await collection(db, 'projects');
   const snapshotProjects = await getCountFromServer(projects);
+  console.log(snapshotProjects);
   const amountProjects = snapshotProjects.data().count;
-  console.log(amountProjects);
   // Returns the amount of current projects in a message
   const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
   if (amountProjectsMessage) {
@@ -183,32 +183,25 @@ const getAmountOfProjects = async () => {
   }
 };
 
-const returnProjects = async () => {
+const returnProjects = async (id:string) => {
+  const array: string[] = [];
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const myUID = sessionStorage.getItem('user');
-  
-  const projects = collection(db, 'projects');  
-
-  const querySnapshot = await getDocs(projects);
-  querySnapshot.forEach(async (doc) => {
-    const deadline = doc.data().Deadline;
-    const fireBaseTime = new Date(
-      deadline.seconds * 1000 + deadline.nanoseconds / 1000000,
-    );
-    const formatOptions = {
-      format: 'dd MMM  yy', 
-    };
-
+  const projects = await getDocs(collection(db, 'projects'));
+  projects.forEach(async (doc) => {
+    const cardSnapShot = collection(db, `projects/${doc.id}/users`);
+    const snapshotUsers = await getCountFromServer(cardSnapShot);
+    const amountUsers = snapshotUsers.data().count;
+    const name = doc.data();
+    const deadline = doc.data().name;
+    console.log(deadline);
     const newElement = document.createElement('div');
-
     if (list) list.appendChild(newElement).setAttribute('class', 'projectCard');
     newElement.innerHTML = `
-    <h4>${doc.id, doc.data().Name}</h4>
-    <p>${fireBaseTime.toLocaleDateString('eng-BE', formatOptions)}</p>
-    <div id='cardBottom'>
+    <h4>${deadline}</h4>
+        <div id='cardBottom'>
       <div id='cardUsers'>
         <img src='/src/img/user.svg' alt='Users' width='12vw' id='projectUsers'>
-        <span>3</span>
+        <span>${amountUsers}</span>
       </div>
       <img src='/src/img/info.svg' alt='Further information about this project' width='15vw' id='projectInfo'>
     </div>
@@ -226,15 +219,15 @@ const createProject = async (e: any) => {
   const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
   const username = auth.currentUser?.displayName;
   e.preventDefault();
-  const project = await setDoc(doc(db, 'projects', newName), {
-    Name: newName,
-    Deadline: Timestamp.fromDate(new Date(newDate)),
-    Description: newDescription,
+  const project = await addDoc(collection(db, 'projects'), {
+    name: newName,
+    deadline: Timestamp.fromDate(new Date(newDate)),
+    description: newDescription,
   });
-  const user = await addDoc(collection(db, 'projects', newName, 'users'), {
-    Name: auth.currentUser!.displayName,
-    UID: auth.currentUser!.uid,
-    Email: auth.currentUser!.email,
+  const user = await addDoc(collection(db, 'projects', `${project.id}`, 'users'), {
+    name: auth.currentUser!.displayName,
+    uid: auth.currentUser!.uid,
+    email: auth.currentUser!.email,
   });
   window.location.reload();
 };
