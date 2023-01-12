@@ -5,6 +5,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-shadow */
+
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import {
@@ -15,6 +17,7 @@ import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
   writeBatch, Timestamp, setDoc, addDoc, onSnapshot,
 } from 'firebase/firestore';
+import Card from '../Components/Card';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -184,31 +187,21 @@ const getAmountOfProjects = async () => {
 };
 
 const returnProjects = async (id:string) => {
-  const array: string[] = [];
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  
   const projects = await getDocs(collection(db, 'projects'));
-  const projectsUsersPromise = projects.map(async (doc: any) => ({
-    users: await getCountFromServer(collection(db, `projects/${doc.id}/users`)),
-    data: doc.data(),
-  }));
+  const thisDate = new Date();
+  // Extracts information out of the firestore database
+  const projectsUsersPromise = projects.docs.map(async (doc: any) => {
+    console.log(doc);
+    const users = await getCountFromServer(collection(db, `projects/${doc.id}/users`));
+    const { name } = doc.data();
+    const { description } = doc.data();
+    return { name, users: users.data().count, description };
+  });
   const projectsUsers = await Promise.all(projectsUsersPromise);
-  
   projectsUsers.forEach((project: any) => {
-    const amountUsers = project.users.data().count;
-    const { name } = project.data();
-    const newElement = document.createElement('div');
-    if (list) list.appendChild(newElement).setAttribute('class', 'projectCard');
-    newElement.innerHTML = `
-        <h4>${name}</h4>
-        <div id='cardBottom'>
-          <div id='cardUsers'>
-            <img src='/src/img/user.svg' alt='Users' width='12vw' id='projectUsers'>
-            <span>${amountUsers}</span>
-          </div>
-          <img src='/src/img/info.svg' alt='Further information about this project' width='15vw' id='projectInfo'>
-        </div>
-      `; 
+    const card = new Card(project.name, thisDate, project.users, project.id);
+    if (list) list.appendChild(card.render());
   });
 };
 
