@@ -13,7 +13,7 @@ import {
 } from '@firebase/auth';
 import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
-  writeBatch, Timestamp, setDoc, addDoc, colRef
+  writeBatch, Timestamp, setDoc, addDoc, onSnapshot,
 } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -186,26 +186,29 @@ const getAmountOfProjects = async () => {
 const returnProjects = async (id:string) => {
   const array: string[] = [];
   const list = document.querySelector<HTMLDivElement>('#projectList');
+  
   const projects = await getDocs(collection(db, 'projects'));
-  projects.forEach(async (doc) => {
-    const cardSnapShot = collection(db, `projects/${doc.id}/users`);
-    const snapshotUsers = await getCountFromServer(cardSnapShot);
-    const amountUsers = snapshotUsers.data().count;
-    const name = doc.data();
-    const deadline = doc.data().name;
-    console.log(deadline);
+  const projectsUsersPromise = projects.map(async (doc: any) => ({
+    users: await getCountFromServer(collection(db, `projects/${doc.id}/users`)),
+    data: doc.data(),
+  }));
+  const projectsUsers = await Promise.all(projectsUsersPromise);
+  
+  projectsUsers.forEach((project: any) => {
+    const amountUsers = project.users.data().count;
+    const { name } = project.data();
     const newElement = document.createElement('div');
     if (list) list.appendChild(newElement).setAttribute('class', 'projectCard');
     newElement.innerHTML = `
-    <h4>${deadline}</h4>
+        <h4>${name}</h4>
         <div id='cardBottom'>
-      <div id='cardUsers'>
-        <img src='/src/img/user.svg' alt='Users' width='12vw' id='projectUsers'>
-        <span>${amountUsers}</span>
-      </div>
-      <img src='/src/img/info.svg' alt='Further information about this project' width='15vw' id='projectInfo'>
-    </div>
-    `; 
+          <div id='cardUsers'>
+            <img src='/src/img/user.svg' alt='Users' width='12vw' id='projectUsers'>
+            <span>${amountUsers}</span>
+          </div>
+          <img src='/src/img/info.svg' alt='Further information about this project' width='15vw' id='projectInfo'>
+        </div>
+      `; 
   });
 };
 
