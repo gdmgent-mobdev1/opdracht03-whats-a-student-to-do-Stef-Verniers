@@ -1,8 +1,9 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-sequences */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/brace-style */
 /* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-lets */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-shadow */
 
@@ -18,6 +19,7 @@ import {
   writeBatch, Timestamp, setDoc, addDoc, onSnapshot,
 } from 'firebase/firestore';
 import Card from '../Components/Card';
+import { convertFirebaseDate } from './functions';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -166,7 +168,7 @@ const logoutUser = (e: any) => {
 
 const getAmountOfProjects = async () => {
   const myUID = sessionStorage.getItem('user');
-  const users = query(collectionGroup(db, 'users'), where('UID', '==', `${myUID}`));
+  const users = query(collectionGroup(db, 'users'), where('uid', '==', `${myUID}`));
   const projects = await collection(db, 'projects');
   const snapshotProjects = await getCountFromServer(projects);
   console.log(snapshotProjects);
@@ -186,21 +188,27 @@ const getAmountOfProjects = async () => {
   }
 };
 
-const returnProjects = async (id:string) => {
+const returnProjects = async (id:any) => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const projects = await getDocs(collection(db, 'projects'));
-  const thisDate = new Date();
+  const uid = sessionStorage.getItem('user');
+  const q = query(collection(db, `projects/${id}/users`), where("uid", "==", `${uid}`));
+  const projects = await q;
+
+  // Ik probeer de id te krijgen uit de documenten
   // Extracts information out of the firestore database
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
-    console.log(doc);
     const users = await getCountFromServer(collection(db, `projects/${doc.id}/users`));
-    const { name } = doc.data();
-    const { description } = doc.data();
-    return { name, users: users.data().count, description };
+    const id = doc.id;
+    const { name, description } = doc.data();
+    const thisDate = convertFirebaseDate(doc.data().deadline);
+    return {
+      id, name, users: users.data().count, description, thisDate,
+    };
   });
   const projectsUsers = await Promise.all(projectsUsersPromise);
   projectsUsers.forEach((project: any) => {
-    const card = new Card(project.name, thisDate, project.users, project.id);
+    console.log(project);
+    const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
 };
@@ -215,16 +223,22 @@ const createProject = async (e: any) => {
   const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
   const username = auth.currentUser?.displayName;
   e.preventDefault();
+  const usersRef = collection(db, 'projects');
+  const userRef = doc(usersRef);
+  // const id = userRef.id
   const project = await addDoc(collection(db, 'projects'), {
     name: newName,
     deadline: Timestamp.fromDate(new Date(newDate)),
     description: newDescription,
+    id: userRef.id,
   });
   const user = await addDoc(collection(db, 'projects', `${project.id}`, 'users'), {
     name: auth.currentUser!.displayName,
     uid: auth.currentUser!.uid,
     email: auth.currentUser!.email,
   });
+  console.log(`document written with ID:`, project.id);
+  return project.id;
   window.location.reload();
 };
 

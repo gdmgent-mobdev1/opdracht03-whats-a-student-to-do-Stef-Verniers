@@ -7,7 +7,7 @@ export default class Card {
 
   h4?: HTMLHeadingElement;
 
-  deadline: Date;
+  deadline: string;
 
   users: number;
 
@@ -29,7 +29,7 @@ export default class Card {
 
   constructor(
     projectName: string,
-    projectDeadline: Date,
+    projectDeadline: string,
     usersNumber: number,
     id = `_${uuidv4()}`,
   ) {
@@ -37,7 +37,6 @@ export default class Card {
     this.name = projectName;
     this.deadline = projectDeadline;
     this.users = usersNumber;
-    this.id = id;
     this.render();
   }
 
@@ -50,7 +49,7 @@ export default class Card {
     this.h4.innerText = this.name;
 
     this.p = document.createElement('p');
-    this.p.innerHTML = this.deadline.toUTCString();
+    this.p.innerHTML = this.deadline;
 
     this.cardBottom = document.createElement('div');
     this.cardBottom.setAttribute('id', 'cardBottom');
@@ -61,11 +60,16 @@ export default class Card {
     this.userImage = document.createElement('img');
     this.userImage.setAttribute('id', 'projectUsers');
     this.userImage.setAttribute('src', '/src/img/user.svg');
+    this.userImage.setAttribute('width', '12vw');
     this.userSpan = document.createElement('span');
     this.userSpan.innerText = this.users.toString();
 
     this.infoImage = document.createElement('img');
     this.infoImage.setAttribute('id', 'projectInfo');
+    this.infoImage.setAttribute('src', '/src/img/info.svg');
+    this.infoImage.setAttribute('width', '15vw');
+
+
 
     this.cardUsers.appendChild(this.userImage);
     this.cardUsers.appendChild(this.userSpan);

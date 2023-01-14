@@ -52,7 +52,6 @@ if (renderDate) renderDate.innerHTML = `Today is ${todaysDate()}`;
 const editButton = document.querySelector<HTMLHeadElement>('#dashboardName');
 const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
 const editBlockCancel = document.querySelector<HTMLButtonElement>('#cancelEdits');
-console.log(editBlock);
 editButton?.addEventListener('click', showEditBlock);
 editBlockCancel?.addEventListener('click', hideEditBlock);
 // Stores new project data to firestore
@@ -61,7 +60,6 @@ submitNewProject?.addEventListener('click', createProject);
 
 // Shows project information
 const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
-console.log(showInfo);
 showInfo?.addEventListener('click', showProjectInformation);
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
