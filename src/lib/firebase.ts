@@ -190,9 +190,11 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async (id:any) => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const uid = sessionStorage.getItem('user');
-  const q = query(collection(db, `projects/${id}/users`), where("uid", "==", `${uid}`));
-  const projects = await q;
+  const myUID = sessionStorage.getItem('user');
+  const getProjectCollection = collection(db, `projects`);
+  const projects = await getDocs(getProjectCollection);
+  console.log(projects);
+  
 
   // Ik probeer de id te krijgen uit de documenten
   // Extracts information out of the firestore database
@@ -204,10 +206,14 @@ const returnProjects = async (id:any) => {
     return {
       id, name, users: users.data().count, description, thisDate,
     };
-  });
+  }); 
   const projectsUsers = await Promise.all(projectsUsersPromise);
-  projectsUsers.forEach((project: any) => {
-    console.log(project);
+  
+  
+  projectsUsers.forEach(async (project: any) => {
+    const users = await query(collection(db, `projects/${project.id}/users`), where('uid', '==', `${myUID}`));
+    console.log({ users });
+    
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
