@@ -211,9 +211,13 @@ const returnProjects = async (id:any) => {
   
   
   projectsUsers.forEach(async (project: any) => {
-    const users = await query(collection(db, `projects/${project.id}/users`), where('uid', '==', `${myUID}`));
-    console.log({ users });
+    const users = query(collection(db, 'users'), where('uid', '==', true));
+    const querySnapshot = await getDocs(users);
+    console.log(querySnapshot);
     
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+    });
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
