@@ -75,6 +75,8 @@ const loginUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
+      console.log(user.uid);
+      
       sessionStorage.setItem('user', String(user.uid));
       window.location.reload();
     })
@@ -103,8 +105,8 @@ const userCred = () => {
         userPlaceholder!.style.fontSize = '1.6rem';
       }
     }
+    return user;
   });
-  console.log('not logged in');
 };
 
 // Log in with Google
@@ -117,7 +119,7 @@ const google = (e:any) => {
       const token = credential?.accessToken;
       // The signed-in user info.
       const { user } = result;
-      sessionStorage.setItem('user', String(user));
+      sessionStorage.setItem('user', String(user.uid));
       window.location.replace('/');
     // ...
     }).catch((error: any) => {
@@ -145,7 +147,6 @@ const updateDashboard = (e:any) => {
     console.log(error);
   });
 };
-
 
 
 // Allows user to log out
@@ -188,14 +189,12 @@ const getAmountOfProjects = async () => {
   }
 };
 
-const returnProjects = async (id:any) => {
+const returnProjects = async () => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
   const myUID = sessionStorage.getItem('user');
-  const getProjectCollection = collection(db, `projects`);
-  const projects = await getDocs(getProjectCollection);
-  console.log(projects);
+  const getMyProjects = collection(db, 'projects');
+  const projects = await getDocs(getMyProjects);
   
-
   // Ik probeer de id te krijgen uit de documenten
   // Extracts information out of the firestore database
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
@@ -208,16 +207,9 @@ const returnProjects = async (id:any) => {
     };
   }); 
   const projectsUsers = await Promise.all(projectsUsersPromise);
-  
+
   
   projectsUsers.forEach(async (project: any) => {
-    const users = query(collection(db, 'users'), where('uid', '==', true));
-    const querySnapshot = await getDocs(users);
-    console.log(querySnapshot);
-    
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data());
-    });
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
