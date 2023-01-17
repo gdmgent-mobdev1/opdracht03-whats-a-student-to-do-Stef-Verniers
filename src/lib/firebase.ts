@@ -40,6 +40,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const db = getFirestore();
+const myUID = sessionStorage.getItem('user');
 
 // Takes care of error handling
 const newError = sessionStorage.getItem('error');
@@ -169,9 +170,8 @@ const logoutUser = (e: any) => {
 
 const getAmountOfProjects = async () => {
   const myUID = sessionStorage.getItem('user');
-  const users = query(collectionGroup(db, 'users'), where('uid', '==', `${myUID}`));
-  const projects = await collection(db, 'projects');
-  const snapshotProjects = await getCountFromServer(projects);
+  const users = query(collection(db, 'projects'), where('users.uid', '==', `${myUID}`));
+  const snapshotProjects = await getCountFromServer(users);
   console.log(snapshotProjects);
   const amountProjects = snapshotProjects.data().count;
   // Returns the amount of current projects in a message
@@ -191,14 +191,13 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async () => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const myUID = sessionStorage.getItem('user');
-  const getMyProjects = collection(db, 'projects');
+  const getMyProjects = query(collection(db, 'projects'), where('users.uid', 'array-contains', `${myUID}`));
   const projects = await getDocs(getMyProjects);
   
   // Ik probeer de id te krijgen uit de documenten
   // Extracts information out of the firestore database
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
-    const users = await getCountFromServer(collection(db, `projects/${doc.id}/users`));
+    const users = await getCountFromServer(collection(db, `projects`));
     const id = doc.id;
     const { name, description } = doc.data();
     const thisDate = convertFirebaseDate(doc.data().deadline);
@@ -233,11 +232,11 @@ const createProject = async (e: any) => {
     deadline: Timestamp.fromDate(new Date(newDate)),
     description: newDescription,
     id: userRef.id,
-  });
-  const user = await addDoc(collection(db, 'projects', `${project.id}`, 'users'), {
-    name: auth.currentUser!.displayName,
-    uid: auth.currentUser!.uid,
-    email: auth.currentUser!.email,
+    $myUID: {
+      name: auth.currentUser!.displayName,
+      uid: auth.currentUser!.uid,
+      email: auth.currentUser!.email,
+    },
   });
   console.log(`document written with ID:`, project.id);
   return project.id;
