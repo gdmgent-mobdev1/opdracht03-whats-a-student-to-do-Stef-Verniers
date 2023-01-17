@@ -170,7 +170,7 @@ const logoutUser = (e: any) => {
 
 const getAmountOfProjects = async () => {
   const myUID = sessionStorage.getItem('user');
-  const users = query(collection(db, 'projects'), where('users.uid', '==', `${myUID}`));
+  const users = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const snapshotProjects = await getCountFromServer(users);
   console.log(snapshotProjects);
   const amountProjects = snapshotProjects.data().count;
@@ -191,13 +191,15 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async () => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
-  const getMyProjects = query(collection(db, 'projects'), where('users.uid', 'array-contains', `${myUID}`));
+  const getMyProjects = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const projects = await getDocs(getMyProjects);
+  console.log(projects.size);
+
   
   // Ik probeer de id te krijgen uit de documenten
   // Extracts information out of the firestore database
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
-    const users = await getCountFromServer(collection(db, `projects`));
+    const users = await getCountFromServer(query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`)));
     const id = doc.id;
     const { name, description } = doc.data();
     const thisDate = convertFirebaseDate(doc.data().deadline);
@@ -207,15 +209,15 @@ const returnProjects = async () => {
   }); 
   const projectsUsers = await Promise.all(projectsUsersPromise);
 
-  
   projectsUsers.forEach(async (project: any) => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
+    console.log(project);
   });
 };
 
 const showProjectInformation = () => {
-  console.log('this works');
+  console.log(`this project's id is nada`);
 };
 
 const createProject = async (e: any) => {
@@ -232,14 +234,12 @@ const createProject = async (e: any) => {
     deadline: Timestamp.fromDate(new Date(newDate)),
     description: newDescription,
     id: userRef.id,
-    $myUID: {
+    [`${myUID}`]: {
       name: auth.currentUser!.displayName,
       uid: auth.currentUser!.uid,
       email: auth.currentUser!.email,
     },
   });
-  console.log(`document written with ID:`, project.id);
-  return project.id;
   window.location.reload();
 };
 

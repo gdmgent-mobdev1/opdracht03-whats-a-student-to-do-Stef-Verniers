@@ -80,11 +80,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const $googleButton = document.querySelector('#login-google');
   const $registerButton = document.querySelector('#register-button');
   const $logoutButton = document.querySelector('#nav-logout');
+  const $projectInformation = document.querySelector('#projectInfo');
 
   // Binding functions to Eventlisteners
   $loginButton?.addEventListener('click', loginUser);
   $googleButton?.addEventListener('click', google);
   $registerButton?.addEventListener('click', registerUser);
   $logoutButton?.addEventListener('click', logoutUser);
+  $projectInformation?.addEventListener('click', showProjectInformation);
   window.addEventListener('unload', logoutUser);
 });
