@@ -9,7 +9,7 @@ import './css/home.css';
 
 import { LoginComponent, RegisterComponent, HomeComponent } from './Components';
 import {
-  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject, showProjectInformation,
+  app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject,
 } from './lib/firebase';
 import {
   createNewProject, hideEditBlock, showEditBlock, todaysDate,
@@ -59,8 +59,8 @@ const submitNewProject = document.querySelector<HTMLButtonElement>('#confirmNewP
 submitNewProject?.addEventListener('click', createProject);
 
 // Shows project information
-const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
-showInfo?.addEventListener('click', showProjectInformation);
+// const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
+// showInfo?.addEventListener('click', showProjectInformation);
 
 // Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {
@@ -80,13 +80,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const $googleButton = document.querySelector('#login-google');
   const $registerButton = document.querySelector('#register-button');
   const $logoutButton = document.querySelector('#nav-logout');
-  const $projectInformation = document.querySelector('#projectInfo');
 
   // Binding functions to Eventlisteners
   $loginButton?.addEventListener('click', loginUser);
   $googleButton?.addEventListener('click', google);
   $registerButton?.addEventListener('click', registerUser);
   $logoutButton?.addEventListener('click', logoutUser);
-  $projectInformation?.addEventListener('click', showProjectInformation);
   window.addEventListener('unload', logoutUser);
 });

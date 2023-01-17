@@ -3,9 +3,9 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/brace-style */
 /* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/no-unused-lets */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 
 // Import the functions you need from the SDKs you need
@@ -41,6 +41,8 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const db = getFirestore();
 const myUID = sessionStorage.getItem('user');
+console.log(myUID);
+
 
 // Takes care of error handling
 const newError = sessionStorage.getItem('error');
@@ -57,7 +59,6 @@ const registerUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
-      console.log(user);
       sessionStorage.setItem('user', String(user.uid));
       window.location.replace('/');
     })
@@ -93,10 +94,8 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
-      console.log(uid);
       const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashboardName');
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
-      console.log(userPlaceholder);
       if (user.displayName !== null) {
         if (userPlaceholder) userPlaceholder.innerHTML = `Welcome ${user.displayName}`;
         if (userPlaceholder) userPlaceholder.setAttribute('value', `${user.displayName}`);
@@ -172,7 +171,6 @@ const getAmountOfProjects = async () => {
   const myUID = sessionStorage.getItem('user');
   const users = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const snapshotProjects = await getCountFromServer(users);
-  console.log(snapshotProjects);
   const amountProjects = snapshotProjects.data().count;
   // Returns the amount of current projects in a message
   const amountProjectsMessage = document.querySelector<HTMLHeadingElement>('#amountProjects');
@@ -191,15 +189,22 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async () => {
   const list = document.querySelector<HTMLDivElement>('#projectList');
+  console.log(list);
+  
   const getMyProjects = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const projects = await getDocs(getMyProjects);
-  console.log(projects.size);
 
+  console.log(projects);
+
+  projects.forEach((doc) => {
+    console.log(doc.data());
+  });
   
-  // Ik probeer de id te krijgen uit de documenten
-  // Extracts information out of the firestore database
+
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
-    const users = await getCountFromServer(query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`)));
+    console.log(doc);
+    
+    const users = await getCountFromServer(collection(db, `projects`));
     const id = doc.id;
     const { name, description } = doc.data();
     const thisDate = convertFirebaseDate(doc.data().deadline);
@@ -209,26 +214,23 @@ const returnProjects = async () => {
   }); 
   const projectsUsers = await Promise.all(projectsUsersPromise);
 
+  
   projectsUsers.forEach(async (project: any) => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
-    console.log(project);
   });
-};
-
-const showProjectInformation = () => {
-  console.log(`this project's id is nada`);
 };
 
 const createProject = async (e: any) => {
   const newName = document.querySelector<HTMLInputElement>('#newName')?.value;
   const newDate = document.querySelector<HTMLInputElement>('#newDate')?.value;
+  
   const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
   const username = auth.currentUser?.displayName;
   e.preventDefault();
   const usersRef = collection(db, 'projects');
   const userRef = doc(usersRef);
-  // const id = userRef.id
+  const id = userRef.id;
   const project = await addDoc(collection(db, 'projects'), {
     name: newName,
     deadline: Timestamp.fromDate(new Date(newDate)),
@@ -243,7 +245,8 @@ const createProject = async (e: any) => {
   window.location.reload();
 };
 
+
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects, createProject, showProjectInformation,
+  getAmountOfProjects, returnProjects, createProject,
 };

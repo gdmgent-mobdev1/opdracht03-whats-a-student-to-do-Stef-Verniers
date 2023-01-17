@@ -1,4 +1,4 @@
-export default class {
+export default class Info {
   id: string;
 
   name: string;
@@ -72,6 +72,14 @@ export default class {
     this.redirect.classList.add('primary-button');
     this.redirect.setAttribute('id', `${this.id}`);
 
+    this.modal.appendChild(this.closeInfo);
+    this.modal.appendChild(this.h2);
+    this.modal.appendChild(this.p);
+    this.modal.appendChild(this.descriptionText);
+    this.modal.appendChild(this.usersInfo);
+    this.modal.appendChild(this.redirect);
+    this.info.appendChild(this.modal);
 
+    return this.info;
   }
 }
