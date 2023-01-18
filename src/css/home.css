@@ -233,7 +233,7 @@ textarea {
 }
 
 #projectCreateTools > img {
-margin-top: 1%;
+    margin-top: 1%;
 }
 
 #formCreateProject > textarea {
@@ -247,4 +247,61 @@ margin-top: 1%;
 
 #formCreateProject > button {
     margin-top: 3vh;
+}
+
+.infoLabel {
+    font-size: 1.3rem;
+    margin-bottom: 0.7rem;
+    color: rgb(224, 224, 224);
+}
+
+#projectInfoTools {
+    display: flex;
+    flex-direction: column;
+    background-color: #3456FF;
+    color: white;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    height: fit-content;
+    width: 70vw;
+}
+
+#closeInfo {
+    margin-bottom: 2vh;
+    display: flex;
+    justify-content: flex-end;
+    font-style: italic;
+}
+
+#projectInfoTools > h2 {
+    font-size: 3.5rem;
+    margin-bottom: 3rem;
+}
+
+#projectInfoTools > p {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+}
+
+#projectDescription {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+}
+
+#usersList {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.third-button {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0 2rem 0;
+    border: none;
+    box-shadow: 0px 1px 18px rgba(93, 180, 252, 0.877);
+    border-radius: 0.5rem;
+    border: solid 1px #070928;
+    color: #ffffff;
+    background-color: #070928;
+    font-family: 'Titillium Web', sans-serif;
 }

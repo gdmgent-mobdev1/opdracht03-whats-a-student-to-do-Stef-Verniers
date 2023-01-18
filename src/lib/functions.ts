@@ -46,7 +46,6 @@ const createNewProject = () => {
   });
 };
 
-
 export {
   todaysDate, showEditBlock, hideEditBlock, createNewProject, convertFirebaseDate,
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-sequences */
 /* eslint-disable no-trailing-spaces */
@@ -20,6 +21,7 @@ import {
 } from 'firebase/firestore';
 import Card from '../Components/Card';
 import { convertFirebaseDate } from './functions';
+import Info from '../Components/Info';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -194,16 +196,7 @@ const returnProjects = async () => {
   const getMyProjects = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const projects = await getDocs(getMyProjects);
 
-  console.log(projects);
-
-  projects.forEach((doc) => {
-    console.log(doc.data());
-  });
-  
-
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
-    console.log(doc);
-    
     const users = await getCountFromServer(collection(db, `projects`));
     const id = doc.id;
     const { name, description } = doc.data();
@@ -214,16 +207,33 @@ const returnProjects = async () => {
   }); 
   const projectsUsers = await Promise.all(projectsUsersPromise);
 
-  
   projectsUsers.forEach(async (project: any) => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
+  const icons = document.querySelectorAll<HTMLImageElement>('.projectCard');
+  console.log(icons);
+  
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < icons.length; i++) {
+    const element = icons[i];
+    
+    element.addEventListener('click', async () => {
+      const getMyDoc = doc(db, 'projects', `${element.getAttribute('id')}`);
+      const myDoc = await getDoc(getMyDoc);
+      console.log(myDoc.data()?.name);
+      const id = myDoc.id;
+      const { name, description, users } = myDoc.data();
+      const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
+      const info = new Info(name, thisDate, description, users, id);
+      return info.render();
+    });
+  }
 };
 
 const createProject = async (e: any) => {
-  const newName = document.querySelector<HTMLInputElement>('#newName')?.value;
-  const newDate = document.querySelector<HTMLInputElement>('#newDate')?.value;
+  const newName = document.querySelector<HTMLInputElement>('#newName')!.value;
+  const newDate = document.querySelector<HTMLInputElement>('#newDate')!.value;
   
   const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
   const username = auth.currentUser?.displayName;
@@ -244,6 +254,7 @@ const createProject = async (e: any) => {
   });
   window.location.reload();
 };
+
 
 
 export {

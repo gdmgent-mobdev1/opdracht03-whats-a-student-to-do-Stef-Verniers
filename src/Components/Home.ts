@@ -64,6 +64,7 @@ class HomeComponent extends Component {
                 </form>
             </div>
         </div>
+        <div class="create-container" id="showDocumentInfo">
     </main>
     `;
 
