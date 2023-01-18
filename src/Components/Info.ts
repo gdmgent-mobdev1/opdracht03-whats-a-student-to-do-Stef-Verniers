@@ -1,3 +1,5 @@
+import { Timestamp } from '@firebase/firestore';
+
 export default class Info {
   id: string;
 
@@ -106,6 +108,10 @@ export default class Info {
     this.modal.appendChild(this.modalContainer);
     info!.appendChild(this.modal);
     info!.classList.add('show');
+    this.close.addEventListener('click', () => {
+      info!.classList.remove('show');
+      info!.removeChild(this.modal);
+    });
 
     return this.info;
   }
