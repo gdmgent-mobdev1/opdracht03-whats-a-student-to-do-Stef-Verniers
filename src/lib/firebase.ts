@@ -22,6 +22,7 @@ import {
 import Card from '../Components/Card';
 import { convertFirebaseDate } from './functions';
 import Info from '../Components/Info';
+import Task from '../Components/Task';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -211,15 +212,16 @@ const returnProjects = async () => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
     if (list) list.appendChild(card.render());
   });
-  const icons = document.querySelectorAll<HTMLImageElement>('.projectCard');
+
+  // Shows information about a project 
+  const icons = document.querySelectorAll<HTMLImageElement>('.projectInfoIcon');
   console.log(icons);
-  
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < icons.length; i++) {
     const element = icons[i];
-    
     element.addEventListener('click', async () => {
-      const getMyDoc = doc(db, 'projects', `${element.getAttribute('id')}`);
+      const cardId = `${element.getAttribute('id')}`;
+      const getMyDoc = doc(db, 'projects', cardId.slice(5));
       const myDoc = await getDoc(getMyDoc);
       console.log(myDoc.data()?.name);
       const id = myDoc.id;
@@ -227,6 +229,29 @@ const returnProjects = async () => {
       const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
       const info = new Info(name, thisDate, description, users, id);
       return info.render();
+    });
+  }
+
+  // Takes you to the project page
+  const appContainer = document.querySelector<HTMLDivElement>('#app')!;
+  const homeContainer = document.querySelector<HTMLDivElement>('#homeContainer')!;
+  const cards = document.querySelectorAll<HTMLDivElement>('.projectCard');
+  const check = sessionStorage.getItem('user');
+
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    card.addEventListener('click', async () => {
+      const cardId = `${card.getAttribute('id')}`;
+      const getMyDoc = doc(db, 'projects', cardId);
+      const myDoc = await getDoc(getMyDoc);
+      console.log(myDoc.data()?.name);
+      const id = myDoc.id;
+      const { name, description, users } = myDoc.data();
+      const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
+      appContainer.removeChild(homeContainer);
+      const task = new Task(id, name, thisDate);
+      appContainer.appendChild(task.render());
     });
   }
 };

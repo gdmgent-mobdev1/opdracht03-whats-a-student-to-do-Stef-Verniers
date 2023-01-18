@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Component from '../lib/Component';
-import { app } from '../lib/firebase';
+import Header from './Header';
 // import Elements from '../lib/Elements';
 
 class HomeComponent extends Component {
@@ -14,6 +14,7 @@ class HomeComponent extends Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     const homeContainer = document.createElement('div');
+    homeContainer.setAttribute('id', 'homeContainer');
     homeContainer.innerHTML = `
     <header>
       <nav id="top-nav">

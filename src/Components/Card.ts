@@ -65,11 +65,10 @@ export default class Card {
     this.userSpan.innerText = this.users.toString();
 
     this.infoImage = document.createElement('img');
-    this.infoImage.setAttribute('id', 'projectInfo');
+    this.infoImage.setAttribute('id', `info-${this.id}`);
+    this.infoImage.classList.add('projectInfoIcon');
     this.infoImage.setAttribute('src', '/src/img/info.svg');
     this.infoImage.setAttribute('width', '15vw');
-
-
 
     this.cardUsers.appendChild(this.userImage);
     this.cardUsers.appendChild(this.userSpan);

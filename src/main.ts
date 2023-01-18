@@ -14,6 +14,7 @@ import {
 import {
   createNewProject, hideEditBlock, showEditBlock, todaysDate,
 } from './lib/functions';
+import Info from './Components/Info';
 
 // Consts about the app buildup
 const login = new LoginComponent();
@@ -25,12 +26,15 @@ const registerPath = window.location.pathname;
 
 // Checks if a user is logged in and renders the corresponding page according to the outcome of the IF-statement
 if (check) {
+  console.log('ingelogd');
   appContainer.appendChild(home.render());
 } else if (window.location.pathname === '/register') {
   appContainer.appendChild(register.render());
 } else {
+  window.location.assign('/login');
   appContainer.appendChild(login.render());
 }
+
 
 /**
  * The homepage
