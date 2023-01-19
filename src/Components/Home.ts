@@ -16,28 +16,7 @@ class HomeComponent extends Component {
     const homeContainer = document.createElement('div');
     homeContainer.setAttribute('id', 'homeContainer');
     homeContainer.innerHTML = `
-    <header>
-      <nav id="top-nav">
-          <ul id="top-nav-ul">
-              <li class="nav-li" id="nav-home" href="/home">Home</li>
-              <li class="nav-li" id="dashboardName">Home</li>
-              <li class="nav-li" id="nav-logout">Log out</li>
-          </ul>
-      </nav>
-    </header>
     <main>
-      <div id='dashboardEdits-form' class="editOpen">
-        <form id='dashboardEdits' class='edit-form'>
-          <div id='practicalDisplayname'>
-            <label for='displayname' class='form-label'>Username</label>
-            <input type='text' class='form-input' id="displaynameInput" name='displayname'></input>
-          </div>
-        </form>
-        <div id='editButtonsList'>
-          <button id="confirmEdits" class="primary-button">Save edits</button>
-          <button id="cancelEdits" class="secondary-button">Cancel</button>
-        </div>
-      </div>
       <div id="dashboard" class="dashboard">
         <div class='dashboardUtils'>
           <span id="currentDate"></span>

@@ -1,0 +1,103 @@
+#thisTask {
+width: 90vw;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+margin-left: auto;
+margin-right: auto;
+}
+
+#thisTaskName {
+width: 100%;
+height: 5vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 0;
+margin-top: 5rem;
+}
+
+#thisTaskName > h2 {
+width: 95%;
+height: 100%;
+background-color: rgb(65, 41, 169);
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 2rem;
+border-radius: 0.5rem;
+}
+
+#leaderGroup {
+width: 95%;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 5vh;
+}
+
+#leaderGroup > * {
+height: 60%; 
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 1.4rem;
+border-radius: 0.5rem;
+border: none;
+}
+
+#thisCountdown {
+height: 11vw; 
+background-color: rgb(255, 0, 0);
+color: white;
+width: 35%;
+padding: 0;
+}
+
+#leaderBoards {
+height: 11vw;
+position: relative;
+margin: 0;
+background-color: #ffffff;
+width: 15%;
+
+}
+
+#addNewTask {
+height: 11vw;
+position: relative;
+background-color: #3456FF;
+color: white;
+width: 35%;
+}
+
+#taskList {
+width: 95%;
+}
+
+#taskList > li {
+padding: 1.5rem 1.5rem 1.5rem 2.5rem;
+border-radius: 2rem;
+height: fit-content;
+font-size: 1.5rem;
+margin: 1rem;
+}
+
+.false {
+    background-color: rgb(255, 83, 83);
+    color: white;
+}
+
+.true {
+    background-color: rgb(54, 255, 104);
+    color: rgb(83, 83, 83);
+}
+
+#taskLabel {
+color: white;
+font-size: 2.2rem;
+height: 3rem;
+display: flex;
+}

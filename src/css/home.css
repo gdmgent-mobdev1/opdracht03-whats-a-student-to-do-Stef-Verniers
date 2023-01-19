@@ -312,3 +312,7 @@ textarea {
 .projectInfoIcon {
     cursor: pointer;
 }
+
+img {
+    cursor: pointer;
+}

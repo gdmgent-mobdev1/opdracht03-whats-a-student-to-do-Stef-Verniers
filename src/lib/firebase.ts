@@ -24,6 +24,8 @@ import Card from '../Components/Card';
 import { convertFirebaseDate } from './functions';
 import Info from '../Components/Info';
 import Task from '../Components/Task';
+import Header from '../Components/Header';
+import ListItem from '../Components/listItem';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -45,6 +47,11 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const db = getFirestore();
 const myUID = sessionStorage.getItem('user');
+const appContainer = document.querySelector<HTMLDivElement>('#app')!;
+const body = document.querySelector<HTMLBodyElement>('body')!;
+console.log(body);
+
+
 console.log(myUID);
 
 
@@ -98,10 +105,13 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
-      const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashboardName');
+      const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashBoardName');
+      console.log(user.displayName);
+      const header = new Header(user.displayName);
+      body.insertBefore(header.render(), appContainer);
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
       if (user.displayName !== null) {
-        if (userPlaceholder) userPlaceholder.innerHTML = `Welcome ${user.displayName}`;
+        if (userPlaceholder) header.render();
         if (userPlaceholder) userPlaceholder.setAttribute('value', `${user.displayName}`);
       } else {
         userPlaceholder!.innerHTML = `Welcome ${uid}`;
@@ -213,33 +223,16 @@ const returnProjects = async () => {
     if (list) list.appendChild(card.render());
   });
 
-  // Shows information about a project 
-  const icons = document.querySelectorAll<HTMLImageElement>('.projectInfoIcon');
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < icons.length; i++) {
-    const element = icons[i];
-    element.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const cardId = `${element.getAttribute('id')}`;
-      const getMyDoc = doc(db, 'projects', cardId.slice(5));
-      const myDoc = await getDoc(getMyDoc);
-      const id = myDoc.id;
-      const { name, description, users } = myDoc.data();
-      const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
-      const info = new Info(name, thisDate, description, users, id);
-      return info.render();
-    });
-  }
-
   // Takes you to the project page
   const appContainer = document.querySelector<HTMLDivElement>('#app')!;
   const homeContainer = document.querySelector<HTMLDivElement>('#homeContainer')!;
-  const cards = document.querySelectorAll<HTMLDivElement>('.projectCard');
+  const cards = document.querySelectorAll<HTMLHeadingElement>('.projectCard');
   const check = sessionStorage.getItem('user');
 
 
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
+    console.log(card);
     
     card.addEventListener('click', async () => {
       const cardId = `${card.getAttribute('id')}`;
@@ -253,6 +246,24 @@ const returnProjects = async () => {
       sessionStorage.setItem('deadline', thisDate);
       const task = new Task(id, name, thisDate);
       window.location.href = `/project/${id}`;
+    });
+  }
+
+  // Shows information about a project 
+  const icons = document.querySelectorAll<HTMLImageElement>('img');
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < icons.length; i++) {
+    const element = icons[i];
+    element.addEventListener('click', async (e) => {
+      if (e && e.stopPropagation) e.stopPropagation(); 
+      const cardId = `${element.getAttribute('id')}`;
+      const getMyDoc = doc(db, 'projects', cardId.slice(5));
+      const myDoc = await getDoc(getMyDoc);
+      const id = myDoc.id;
+      const { name, description, users } = myDoc.data();
+      const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
+      const info = new Info(name, thisDate, description, users, id);
+      return info.render();
     });
   }
 };
@@ -281,9 +292,23 @@ const createProject = async (e: any) => {
   window.location.reload();
 };
 
+const returnSubtasks = async () => {
+  const list = document.querySelector('#taskList');
+  const listItem = document.querySelector('#listItem');
+  const projectId = sessionStorage.getItem('id');
+  console.log(projectId);
+  const subtasks = collection(db, `projects/${projectId}/subtasks`);
+  const getSubTask = await getDocs(subtasks);
+
+  getSubTask.forEach(async (doc) => {
+    const item = new ListItem(doc.id, doc.data().titel, doc.data().finished);
+    item.render();
+  });
+};
+
 
 
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects, createProject,
+  getAmountOfProjects, returnProjects, createProject, returnSubtasks,
 };

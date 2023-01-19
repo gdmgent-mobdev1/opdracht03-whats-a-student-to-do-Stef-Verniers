@@ -68,7 +68,7 @@ export default class Card {
     this.infoImage.setAttribute('id', `info-${this.id}`);
     this.infoImage.classList.add('projectInfoIcon');
     this.infoImage.setAttribute('src', '/src/img/info.svg');
-    this.infoImage.setAttribute('width', '15vw');
+    this.infoImage.setAttribute('width', '25vw');
 
     this.cardUsers.appendChild(this.userImage);
     this.cardUsers.appendChild(this.userSpan);

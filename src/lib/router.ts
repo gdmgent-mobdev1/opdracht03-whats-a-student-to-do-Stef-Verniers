@@ -14,6 +14,8 @@ const Router = () => {
   const home = new HomeComponent();
   const task = new Task(id, name, deadline);
   const appContainer = document.querySelector<HTMLDivElement>('#app')!;
+  const check = sessionStorage.getItem('user');
+
 
   const router = new Navigo('/');
   router.on('/', () => {
@@ -25,11 +27,19 @@ const Router = () => {
   router.on('/register', () => {
     appContainer.appendChild(register.render());
   }).resolve();
-  router.on('/home', () => {
-    appContainer.appendChild(home.render());
+  router.on('/home', async () => {
+    if (check) {
+      await appContainer.appendChild(home.render());
+    } else {
+      window.location.replace('/login');
+    }
   }).resolve();
-  router.on('/project/:id', () => {
-    appContainer.appendChild(task.render());
+  router.on('/project/:id', async () => {
+    if (check) {
+      await appContainer.appendChild(task.render());
+    } else {
+      window.location.replace('/login');
+    }
   }).resolve();
 };
 

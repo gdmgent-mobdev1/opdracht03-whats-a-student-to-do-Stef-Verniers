@@ -14,10 +14,11 @@ import {
   app, registerUser, loginUser, logoutUser, google, userCred, auth, updateDashboard, getAmountOfProjects, returnProjects, createProject,
 } from './lib/firebase';
 import {
-  createNewProject, hideEditBlock, showEditBlock, todaysDate,
+  todaysDate,
 } from './lib/functions';
 import Info from './Components/Info';
 import Router from './lib/router';
+import Header from './Components/Header';
 
 // Consts about the app buildup
 const login = new LoginComponent();
@@ -27,43 +28,21 @@ const appContainer = document.querySelector<HTMLDivElement>('#app')!;
 const check = sessionStorage.getItem('user');
 const registerPath = window.location.pathname;
 
-// Checks if a user is logged in and renders the corresponding page according to the outcome of the IF-statement
-
-
-
 /**
  * The homepage
  */
 
-// Running functions
-Router();
-userCred();
-getAmountOfProjects();
-returnProjects();
-createNewProject();
-
-// Saves a new username
-const dashboardUpdateButton = document.querySelector<HTMLButtonElement>('#confirmEdits');
-dashboardUpdateButton?.addEventListener('click', updateDashboard);
-// Renders out the current date in a specific layout
-const renderDate = document.querySelector<HTMLSpanElement>('#currentDate');
-if (renderDate) renderDate.innerHTML = `Today is ${todaysDate()}`;
-// Shows the edit block for the username
-const editButton = document.querySelector<HTMLHeadElement>('#dashboardName');
-const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
-const editBlockCancel = document.querySelector<HTMLButtonElement>('#cancelEdits');
-editButton?.addEventListener('click', showEditBlock);
-editBlockCancel?.addEventListener('click', hideEditBlock);
-// Stores new project data to firestore
-const submitNewProject = document.querySelector<HTMLButtonElement>('#confirmNewProject');
-submitNewProject?.addEventListener('click', createProject);
-
-// Shows project information
-// const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
-// showInfo?.addEventListener('click', showProjectInformation);
-
-// Renders const and stuff when the DOM content is loaded so there will be no errors
 window.addEventListener('DOMContentLoaded', () => {
+  // Running functions
+  userCred();
+  Router();
+  getAmountOfProjects();
+  returnProjects();
+
+  // Shows project information
+  // const showInfo = document.querySelector<HTMLImageElement>('#projectInfo');
+  // showInfo?.addEventListener('click', showProjectInformation);
+
   const errorMessage = document.querySelector<HTMLParagraphElement>('.error')!;
   const newError = sessionStorage.getItem('error');
 
@@ -79,12 +58,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const $loginButton = document.querySelector('#login-button');
   const $googleButton = document.querySelector('#login-google');
   const $registerButton = document.querySelector('#register-button');
-  const $logoutButton = document.querySelector('#nav-logout');
 
   // Binding functions to Eventlisteners
   $loginButton?.addEventListener('click', loginUser);
   $googleButton?.addEventListener('click', google);
   $registerButton?.addEventListener('click', registerUser);
-  $logoutButton?.addEventListener('click', logoutUser);
-  window.addEventListener('unload', logoutUser);
 });

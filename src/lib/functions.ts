@@ -1,3 +1,6 @@
+/* eslint-disable import/no-cycle */
+import { updateDashboard, createProject, logoutUser, returnSubtasks } from './firebase';
+
 const todaysDate = () => {
   const date = new Date().toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' });
   return date;
@@ -15,37 +18,67 @@ const convertFirebaseDate = (date: any) => {
   return formattedDate.toString();
 };
 
-const showEditBlock = (e: any) => {
-  e.preventDefault();
+window.setTimeout(() => {
+  const showEditBlock = (e: any) => {
+    e.preventDefault();
+    const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
+    if (!editBlock?.classList.contains('open')) {
+      editBlock?.classList.add('open');
+    }
+  };
+
+  const hideEditBlock = (e: any) => {
+    e.preventDefault();
+    const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
+    if (editBlock?.classList.contains('open')) {
+      editBlock.classList.remove('open');
+    }
+  };
+
+  const createNewProject = () => {
+    const open = document.querySelector<HTMLImageElement>('#newProject');
+    const modal = document.querySelector<HTMLDivElement>('#createProjectContainer');
+    const close = document.querySelector<HTMLImageElement>('#closeNewProjectForm');
+
+    open?.addEventListener('click', () => {
+      modal?.classList.add('show');
+    });
+
+    close?.addEventListener('click', () => {
+      modal?.classList.remove('show');
+      document.querySelector<HTMLFormElement>('#formCreateProject')?.reset();
+    });
+  };
+
+  const dashboardUpdateButton = document.querySelector<HTMLButtonElement>('#confirmEdits');
+  dashboardUpdateButton?.addEventListener('click', updateDashboard);
+
+  // Renders out the current date in a specific layout
+  const renderDate = document.querySelector<HTMLSpanElement>('#currentDate');
+  if (renderDate) renderDate.innerHTML = `Today is ${todaysDate()}`;
+  // Shows the edit block for the username
+  const editButton = document.querySelector<HTMLHeadElement>('#dashBoardName');
   const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
-  if (!editBlock?.classList.contains('open')) {
-    editBlock?.classList.add('open');
-  }
-};
+  const editBlockCancel = document.querySelector<HTMLButtonElement>('#cancelEdits');
+  editButton?.addEventListener('click', showEditBlock);
+  editBlockCancel?.addEventListener('click', hideEditBlock);
+  // Stores new project data to firestore
+  const submitNewProject = document.querySelector<HTMLButtonElement>('#confirmNewProject');
+  submitNewProject?.addEventListener('click', createProject);
 
-const hideEditBlock = (e: any) => {
-  e.preventDefault();
-  const editBlock = document.querySelector<HTMLDivElement>('#dashboardEdits-form');
-  if (editBlock?.classList.contains('open')) {
-    editBlock.classList.remove('open');
-  }
-};
+  createNewProject();
+  returnSubtasks();
 
-const createNewProject = () => {
-  const open = document.querySelector<HTMLImageElement>('#newProject');
-  const modal = document.querySelector<HTMLDivElement>('#createProjectContainer');
-  const close = document.querySelector<HTMLImageElement>('#closeNewProjectForm');
-
-  open?.addEventListener('click', () => {
-    modal?.classList.add('show');
+  const $homeButton = document.querySelector('#nav-home');
+  const $logoutButton = document.querySelector('#logOut');
+  $homeButton?.addEventListener('click', () => {
+    window.location.href = '/home';
   });
+  $logoutButton?.addEventListener('click', logoutUser);
+  window.addEventListener('unload', logoutUser);
+}, 2000);
 
-  close?.addEventListener('click', () => {
-    modal?.classList.remove('show');
-    document.querySelector<HTMLFormElement>('#formCreateProject')?.reset();
-  });
-};
 
 export {
-  todaysDate, showEditBlock, hideEditBlock, createNewProject, convertFirebaseDate,
+  todaysDate, convertFirebaseDate,
 };
