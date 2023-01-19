@@ -26,6 +26,7 @@
     "@firebase/auth": "^0.21.0",
     "@firebase/firestore": "^3.8.0",
     "firebase": "^9.15.0",
+    "navigo": "^8.11.1",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13"
   }

@@ -12,6 +12,7 @@ class LoginComponent extends Component {
 
   // eslint-disable-next-line class-methods-use-this
   render() {
+    // window.location.assign('/login');
     const loginContainer = document.createElement('div');
     loginContainer.setAttribute('id', 'loginPage');
     loginContainer.innerHTML = `

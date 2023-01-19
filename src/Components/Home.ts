@@ -19,7 +19,7 @@ class HomeComponent extends Component {
     <header>
       <nav id="top-nav">
           <ul id="top-nav-ul">
-              <li class="nav-li" id="nav-home">Home</li>
+              <li class="nav-li" id="nav-home" href="/home">Home</li>
               <li class="nav-li" id="dashboardName">Home</li>
               <li class="nav-li" id="nav-logout">Log out</li>
           </ul>

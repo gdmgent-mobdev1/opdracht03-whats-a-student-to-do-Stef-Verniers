@@ -46,6 +46,7 @@ export default class Task {
     this.p = document.createElement('p');
 
     this.task = document.createElement('div');
+    this.task.setAttribute('id', 'thisTask');
     this.task.innerHTML = `
     <header>
       <nav id="top-nav">
@@ -95,9 +96,10 @@ export default class Task {
     this.currentStatus.setAttribute('src', '/src/img/info.svg');
     this.listItem.appendChild(this.p);
     this.listItem.appendChild(this.currentStatus);
-    this.taskList.appendChild(this.listItem);
 
     this.task.appendChild(this.taskNameContainer);
+    this.task.appendChild(this.countdownContainer);
+    this.task.appendChild(this.taskList);
     return this.task;
   }
 }

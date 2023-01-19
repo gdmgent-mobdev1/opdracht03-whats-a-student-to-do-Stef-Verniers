@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-sequences */
@@ -63,7 +64,7 @@ const registerUser = (e: any) => {
     // Signed in
       const { user } = userCredential;
       sessionStorage.setItem('user', String(user.uid));
-      window.location.replace('/');
+      window.location.replace('/home');
     })
     .catch((error) => {
       const errorMessage = error.message;
@@ -83,7 +84,7 @@ const loginUser = (e: any) => {
       console.log(user.uid);
       
       sessionStorage.setItem('user', String(user.uid));
-      window.location.reload();
+      window.location.replace('/home');
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -123,7 +124,7 @@ const google = (e:any) => {
       // The signed-in user info.
       const { user } = result;
       sessionStorage.setItem('user', String(user.uid));
-      window.location.replace('/');
+      window.location.replace('/home');
     // ...
     }).catch((error: any) => {
     // Handle Errors here.
@@ -191,12 +192,11 @@ const getAmountOfProjects = async () => {
 };
 
 const returnProjects = async () => {
-  const list = document.querySelector<HTMLDivElement>('#projectList');
-  console.log(list);
+  const list = await document.querySelector<HTMLDivElement>('#projectList');
   
   const getMyProjects = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const projects = await getDocs(getMyProjects);
-
+  
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
     const users = await getCountFromServer(collection(db, `projects`));
     const id = doc.id;
@@ -215,15 +215,14 @@ const returnProjects = async () => {
 
   // Shows information about a project 
   const icons = document.querySelectorAll<HTMLImageElement>('.projectInfoIcon');
-  console.log(icons);
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < icons.length; i++) {
     const element = icons[i];
-    element.addEventListener('click', async () => {
+    element.addEventListener('click', async (e) => {
+      e.preventDefault();
       const cardId = `${element.getAttribute('id')}`;
       const getMyDoc = doc(db, 'projects', cardId.slice(5));
       const myDoc = await getDoc(getMyDoc);
-      console.log(myDoc.data()?.name);
       const id = myDoc.id;
       const { name, description, users } = myDoc.data();
       const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
@@ -241,17 +240,19 @@ const returnProjects = async () => {
 
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
+    
     card.addEventListener('click', async () => {
       const cardId = `${card.getAttribute('id')}`;
       const getMyDoc = doc(db, 'projects', cardId);
       const myDoc = await getDoc(getMyDoc);
-      console.log(myDoc.data()?.name);
       const id = myDoc.id;
       const { name, description, users } = myDoc.data();
-      const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
-      appContainer.removeChild(homeContainer);
+      const thisDate = convertFirebaseDate(myDoc.data().deadline);
+      sessionStorage.setItem('id', id);
+      sessionStorage.setItem('name', name);
+      sessionStorage.setItem('deadline', thisDate);
       const task = new Task(id, name, thisDate);
-      appContainer.appendChild(task.render());
+      window.location.href = `/project/${id}`;
     });
   }
 };

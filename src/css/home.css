@@ -295,7 +295,8 @@ textarea {
 
 .third-button {
     width: 100%;
-    padding: 1rem;
+    padding: 1.5rem 0rem 1.5rem 0rem;
+    text-align: center;
     margin: 1rem 0 2rem 0;
     border: none;
     box-shadow: 0px 1px 18px rgba(93, 180, 252, 0.877);
@@ -304,4 +305,10 @@ textarea {
     color: #ffffff;
     background-color: #070928;
     font-family: 'Titillium Web', sans-serif;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.projectInfoIcon {
+    cursor: pointer;
 }

@@ -15,7 +15,7 @@ export default class Info {
 
   users: string;
 
-  redirect: HTMLButtonElement;
+  redirect: HTMLAnchorElement;
 
   info: HTMLDivElement;
 
@@ -91,10 +91,12 @@ export default class Info {
     this.usersInfo.setAttribute('id', 'usersList');
     this.usersInfo.innerHTML = this.users;
 
-    this.redirect = document.createElement('button');
+    this.redirect = document.createElement('a');
     this.redirect.classList.add('third-button');
     this.redirect.innerText = 'Go to this project';
     this.redirect.setAttribute('id', `${this.id}`);
+    this.redirect.setAttribute('href', `/project/${this.id}`);
+
 
     this.modalContainer.appendChild(this.closeInfo);
     this.modalContainer.appendChild(this.h2);

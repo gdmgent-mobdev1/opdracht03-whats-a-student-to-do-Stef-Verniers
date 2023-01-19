@@ -1,3 +1,5 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable default-case */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import './css/reset.css';
@@ -15,6 +17,7 @@ import {
   createNewProject, hideEditBlock, showEditBlock, todaysDate,
 } from './lib/functions';
 import Info from './Components/Info';
+import Router from './lib/router';
 
 // Consts about the app buildup
 const login = new LoginComponent();
@@ -25,15 +28,7 @@ const check = sessionStorage.getItem('user');
 const registerPath = window.location.pathname;
 
 // Checks if a user is logged in and renders the corresponding page according to the outcome of the IF-statement
-if (check) {
-  console.log('ingelogd');
-  appContainer.appendChild(home.render());
-} else if (window.location.pathname === '/register') {
-  appContainer.appendChild(register.render());
-} else {
-  window.location.assign('/login');
-  appContainer.appendChild(login.render());
-}
+
 
 
 /**
@@ -41,6 +36,7 @@ if (check) {
  */
 
 // Running functions
+Router();
 userCred();
 getAmountOfProjects();
 returnProjects();
