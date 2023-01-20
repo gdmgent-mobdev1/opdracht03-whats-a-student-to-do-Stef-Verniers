@@ -26,7 +26,8 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    background-color: #f6ebff;
+    background-color: #3456FF;
+    color: white;
     padding: 3rem;
     border-radius: 0.5rem;
     height: fit-content;
@@ -37,9 +38,18 @@
     margin-bottom: 2rem;
     height: 3rem;
     border: none;
-    box-shadow: 0px 3px 18px rgb(218, 185, 223);
+    box-shadow: 0px 3px 18px rgba(39, 43, 53, 0.281);
     border-radius: 0.5rem;
-    padding-left: 1rem;
+    padding-left: 0.5rem;
+}
+
+.login-form > select {
+    margin-bottom: 2rem;
+    height: 3rem;
+    border: none;
+    box-shadow: 0px 3px 18px rgba(39, 43, 53, 0.281);
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
 }
 
 .login-form > label {
@@ -53,7 +63,7 @@
     padding: 1rem;
     margin: 1rem 0 1rem 0;
     border: none;
-    box-shadow: 0px 3px 18px rgb(218, 185, 223);
+    box-shadow: 0px 3px 18px rgba(39, 43, 53, 0.281);
     border-radius: 0.5rem;
     background-color: #A555EC;
     color: #fbeeff;
@@ -64,7 +74,7 @@
     padding: 1rem;
     margin: 1rem 0 2rem 0;
     border: none;
-    box-shadow: 0px 3px 18px rgb(218, 185, 223);
+    box-shadow: 0px 3px 18px rgba(39, 43, 53, 0.281);
     border-radius: 0.5rem;
     border: solid 1px #A555EC;
     color: #A555EC;

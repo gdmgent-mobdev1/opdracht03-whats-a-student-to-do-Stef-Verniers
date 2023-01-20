@@ -21,12 +21,12 @@ margin-top: 5rem;
 #thisTaskName > h2 {
 width: 95%;
 height: 100%;
-background-color: rgb(65, 41, 169);
 display: flex;
 justify-content: center;
 align-items: center;
-font-size: 2rem;
+font-size: 4rem;
 border-radius: 0.5rem;
+font-weight: bold;
 }
 
 #leaderGroup {
@@ -50,8 +50,10 @@ border: none;
 
 #thisCountdown {
 height: 11vw; 
-background-color: rgb(255, 0, 0);
-color: white;
+outline: solid 3px rgb(255, 0, 0);
+color: rgb(255, 0, 0);
+font-size: 1.8rem;
+font-weight: bold;
 width: 35%;
 padding: 0;
 }
@@ -60,9 +62,14 @@ padding: 0;
 height: 11vw;
 position: relative;
 margin: 0;
-background-color: #ffffff;
+background-color: transparent;
 width: 15%;
+}
 
+#trophy {
+width: 100%;
+height: 100%;
+background-image: url('/src/img/throphy.svg');
 }
 
 #addNewTask {
@@ -83,16 +90,19 @@ border-radius: 2rem;
 height: fit-content;
 font-size: 1.5rem;
 margin: 1rem;
+display: flex;
+flex-direction: column;
+
 }
 
 .false {
-    background-color: rgb(255, 83, 83);
-    color: white;
+background-color: rgb(255, 83, 83);
+color: white;
 }
 
 .true {
-    background-color: rgb(54, 255, 104);
-    color: rgb(83, 83, 83);
+background-color: rgb(54, 255, 104);
+color: rgb(83, 83, 83);
 }
 
 #taskLabel {
@@ -100,4 +110,24 @@ color: white;
 font-size: 2.2rem;
 height: 3rem;
 display: flex;
+}
+
+.startDiv {
+width: 100%;
+height: fit-content;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+font-weight: bold;
+font-size: 1.5rem;
+}
+
+.arrow {
+width: 5vw;
+animation: rotation 0.5s  linear;
+}
+
+#newSubtaskDescription {
+margin-bottom: 2rem;
+padding: 1rem;
 }

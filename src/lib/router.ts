@@ -1,6 +1,6 @@
 import Navigo from 'navigo';
 import {
-  HomeComponent, LoginComponent, RegisterComponent,
+  HomeComponent, LoginComponent, RegisterComponent, NewTaskComponent,
 } from '../Components';
 import Task from '../Components/Task';
 
@@ -12,6 +12,7 @@ const Router = () => {
   const login = new LoginComponent();
   const register = new RegisterComponent();
   const home = new HomeComponent();
+  const newTask = new NewTaskComponent();
   const task = new Task(id, name, deadline);
   const appContainer = document.querySelector<HTMLDivElement>('#app')!;
   const check = sessionStorage.getItem('user');
@@ -34,9 +35,10 @@ const Router = () => {
       window.location.replace('/login');
     }
   }).resolve();
-  router.on('/project/:id', async () => {
+  router.on('/project/:id', () => {
     if (check) {
-      await appContainer.appendChild(task.render());
+      appContainer.appendChild(task.render());
+      appContainer.appendChild(newTask.render());
     } else {
       window.location.replace('/login');
     }

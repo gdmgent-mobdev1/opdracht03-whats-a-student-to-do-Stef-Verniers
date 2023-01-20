@@ -47,3 +47,10 @@ button {
 img {
     cursor: pointer;
 }
+
+.label {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+}

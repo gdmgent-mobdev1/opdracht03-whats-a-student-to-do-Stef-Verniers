@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable prefer-destructuring */
@@ -299,16 +300,48 @@ const returnSubtasks = async () => {
   console.log(projectId);
   const subtasks = collection(db, `projects/${projectId}/subtasks`);
   const getSubTask = await getDocs(subtasks);
-
+  
+  if (!getSubTask) {
+    list!.innerHTML = `
+    <h4>No current Subtasks</h4>
+    `;
+  }
   getSubTask.forEach(async (doc) => {
-    const item = new ListItem(doc.id, doc.data().titel, doc.data().finished);
+    console.log(doc.data());
+    
+    const {
+      title, finished, description, user, timeSpent, 
+    } = doc.data();
+    const item = new ListItem(doc.id, title, finished, description, user, timeSpent);
     item.render();
   });
+};
+
+const createSubtask = async (e: any) => {
+  const projectId = sessionStorage.getItem('id');
+  console.log(projectId);
+
+  const taskName = document.querySelector<HTMLInputElement>('#newSubtaskName')?.value;
+  const taskDescription = document.querySelector<HTMLInputElement>('#newSubtaskDescription')?.value;
+  const taskUser = document.querySelector<HTMLSelectElement>('#newSubtaskUser')?.value;
+
+  console.log(taskName);
+  e.preventDefault();
+  const newTask = await addDoc(collection(db, `projects/${projectId}/subtasks`), {
+    title: taskName,
+    description: taskDescription,
+    user: taskUser,
+    finished: false,
+    pending: false,
+    timeSpent: '00:00',
+    timer: '00:00',
+  });
+  window.location.reload();
 };
 
 
 
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects, createProject, returnSubtasks,
+  getAmountOfProjects, returnProjects, createProject, returnSubtasks, createSubtask,
 };

@@ -32,7 +32,7 @@ class HomeComponent extends Component {
                 <form id="formCreateProject" class="login-form">
                   <div id='projectCreateTools'>
                     <h3>Create a new project</h3>
-                    <img src='/src/img/close.svg' alt='Close this form' width='15vw' id='closeNewProjectForm'>
+                    <img src='/src/img/close_white.svg' alt='Close this form' width='15vw' id='closeNewProjectForm'>
                   </div>
                   <label for='projectName' class='form-label'>Project name</label>
                   <input type='text' class='form-input' name='projectName' id='newName'></input>
