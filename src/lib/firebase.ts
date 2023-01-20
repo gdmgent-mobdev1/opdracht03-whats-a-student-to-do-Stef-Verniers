@@ -50,8 +50,6 @@ const db = getFirestore();
 const myUID = sessionStorage.getItem('user');
 const appContainer = document.querySelector<HTMLDivElement>('#app')!;
 const body = document.querySelector<HTMLBodyElement>('body')!;
-console.log(body);
-
 
 console.log(myUID);
 
@@ -98,7 +96,6 @@ const loginUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
-      console.log(user.uid);
       
       sessionStorage.setItem('user', String(user.uid));
       window.location.replace('/home');
@@ -110,22 +107,24 @@ const loginUser = (e: any) => {
 };
 
 const userCred = () => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
-      
+      const getMyDoc = doc(db, 'users', user.uid);
+      const myDoc = await getDoc(getMyDoc);
+      const { name, email } = myDoc.data();
       const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashBoardName');
-      console.log(user.displayName);
+      console.log(name);
       const header = new Header(user.displayName);
       body.insertBefore(header.render(), appContainer);
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
       if (user.displayName !== null) {
         if (userPlaceholder) header.render();
-        if (userPlaceholder) userPlaceholder.setAttribute('value', `${user.displayName}`);
+        if (userPlaceholder) userPlaceholder.setAttribute('value', `${name}`);
       } else {
-        userPlaceholder!.innerHTML = `Welcome ${uid}`;
+        userPlaceholder!.innerHTML = `Welcome ${name}`;
         displaynamePlaceholder!.setAttribute('value', `${uid}`);
         userPlaceholder!.style.fontSize = '1.6rem';
       }
@@ -145,6 +144,11 @@ const google = (e:any) => {
       // The signed-in user info.
       const { user } = result;
       sessionStorage.setItem('user', String(user.uid));
+      setDoc(doc(db, "users", `${user.uid}`), {
+        name: user.email,
+        email: user.email,
+        uid: user.uid,
+      });
       window.location.replace('/home');
     // ...
     }).catch((error: any) => {
@@ -180,7 +184,6 @@ const logoutUser = (e: any) => {
   signOut(auth)
     .then(() => {
       sessionStorage.removeItem('user');
-      console.log('signed out successful');
       window.location.reload();
     })
     .catch((error) => {
@@ -243,8 +246,6 @@ const returnProjects = async () => {
 
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    console.log(card);
-    
     card.addEventListener('click', async () => {
       const cardId = `${card.getAttribute('id')}`;
       const getMyDoc = doc(db, 'projects', cardId);

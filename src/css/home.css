@@ -339,3 +339,7 @@ margin: 2rem 0 -2rem 0;
 .first {
 margin-top: 2rem;
 }
+
+textarea {
+font-family: 'Titillium Web', sans-serif; 
+}
