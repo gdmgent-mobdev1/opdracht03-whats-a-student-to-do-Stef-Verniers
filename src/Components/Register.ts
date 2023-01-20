@@ -20,10 +20,12 @@ class RegisterComponent extends Component {
     <h2>Fill out this form and get started</h2>
     <form id='register-form' class='register-form'>
       <p class='error hidden'>Dit is een error</p> 
-      <label for='username' class='form-label'>Email</label>
-        <input type='text' class='form-input' name='username'></input>
+      <label for='username' class='form-label'>Username</label>
+        <input type='text' class='form-input' name='username' id='registerName'></input>
+      <label for='email' class='form-label'>Email</label>
+        <input type='text' class='form-input' name='usermail' id='registerEmail'></input>
       <label for='password' class='form-label'>Password</label>
-        <input type='password' class='form-input' name='password'></input>
+        <input type='password' class='form-input' name='password' id='registerPassword'></input>
       <button type='submit' id='register-button' class='primary-button'>Register</button>
       <a href="/"><p>Already have an account? Click here to log in</p></a>
     </form>

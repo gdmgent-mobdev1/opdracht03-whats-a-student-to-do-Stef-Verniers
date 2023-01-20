@@ -65,13 +65,22 @@ const registerUser = (e: any) => {
   if (newError) {
     sessionStorage.removeItem('error');
   }
-  const username = (<HTMLInputElement>document.querySelector('input[name="username"]'))!.value;
+
+  const nameUser = (<HTMLInputElement>document.querySelector('input[name="username"]'))!.value;
+  const username = (<HTMLInputElement>document.querySelector('input[name="usermail"]'))!.value;
   const password = (<HTMLInputElement>document.querySelector('input[name="password"]'))!.value;
+
   createUserWithEmailAndPassword(auth, username, password)
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
+      console.log(user);
       sessionStorage.setItem('user', String(user.uid));
+      setDoc(doc(db, "users", `${user.uid}`), {
+        name: nameUser,
+        email: username,
+        uid: user.uid,
+      });
       window.location.replace('/home');
     })
     .catch((error) => {
@@ -106,6 +115,7 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
+      
       const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashBoardName');
       console.log(user.displayName);
       const header = new Header(user.displayName);
