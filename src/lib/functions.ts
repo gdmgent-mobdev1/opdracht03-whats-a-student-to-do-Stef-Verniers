@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import {
-  updateDashboard, createProject, logoutUser, returnSubtasks, createSubtask,
+  updateDashboard, createProject, logoutUser, returnSubtasks, createSubtask, stopWatch,
 } from './firebase';
 
 const todaysDate = () => {
@@ -92,6 +92,7 @@ window.setTimeout(() => {
   createNewProject();
   returnSubtasks();
   createNewSubtask();
+  stopWatch();
 
   const $homeButton = document.querySelector('#nav-home');
   const $logoutButton = document.querySelector('#logOut');

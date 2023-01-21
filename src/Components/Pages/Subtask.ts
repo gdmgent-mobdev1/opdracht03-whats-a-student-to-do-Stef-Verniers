@@ -33,13 +33,11 @@ export default class Subtask {
 
   countingDiv: HTMLDivElement;
 
-  counting: string;
-
-  countingText: HTMLParagraphElement;
-
   stopCountingDiv: HTMLDivElement;
 
-  stopCountingIcon: HTMLImageElement;
+  counting: string;
+
+  countingText: any;
 
   constructor(
     id: string,
@@ -58,51 +56,49 @@ export default class Subtask {
   }
 
   render() {
-    const div = document.createElement('div');
-    const heading = document.createElement('h2');
-    const subheading = document.createElement('h3');
-    const p = document.createElement('p');
-    const img = document.createElement('img');
+    this.subtaskPage = document.createElement('div');
+    this.subtaskPage.setAttribute('id', 'subDetail');
 
-    this.subtaskPage = div;
-    this.subtaskContainer.setAttribute('id', 'thisSubTaskName');
-    this.subtaskHeading = heading;
+    this.subtaskContainer = document.createElement('div');
+    this.subtaskContainer.setAttribute('id', 'subTaskTitleContainer');
+    this.subtaskHeading = document.createElement('h2');
     this.subtaskHeading.innerText = this.subtask;
     this.subtaskContainer.appendChild(this.subtaskHeading);
 
-
-    this.statusContainer = div;
-    this.statusContainer.setAttribute('id', 'thisSubTaskStatus');
-    this.statusHeading = subheading;
+    this.statusContainer = document.createElement('div');
+    this.statusContainer.setAttribute('id', 'subTaskStatusContainer');
+    this.statusHeading = document.createElement('h3');
     this.statusHeading.innerText = 'In progress';
     this.statusContainer.appendChild(this.statusHeading);
-    this.subtaskPage.appendChild(this.subtaskContainer);
 
-
-    this.timeContainer = div;
-    this.timeContainer.setAttribute('id', 'thisSubTaskTimer');
-    this.timeHeading = p;
+    this.timeContainer = document.createElement('div');
+    this.timeContainer.setAttribute('id', 'subTaskTimeContainer');
+    this.timeHeading = document.createElement('p');
     this.timeHeading.innerText = this.time;
     this.timeContainer.appendChild(this.timeHeading);
+    this.subtaskContainer.appendChild(this.subtaskHeading);
+
+    this.startCounterDiv = document.createElement('div');
+    this.startCounterDiv.setAttribute('id', 'startCounting');
+    this.startCounterDiv.innerText = 'Start Counting';
+
+    this.counterDiv = document.createElement('div');
+    this.counterDiv.setAttribute('id', 'subTaskCounter');
+    this.countingText = document.createElement('p');
+    this.countingText.setAttribute('id', 'timerText');
+    this.countingText.innerText = '00:00';
+    this.counterDiv.appendChild(this.startCounterDiv);
+    this.counterDiv.appendChild(this.countingText);
+
+    this.stopCountingDiv = document.createElement('div');
+    this.stopCountingDiv.setAttribute('id', 'stopCounting');
+    this.stopCountingDiv.innerText = 'Stop the Clock';
+    this.counterDiv.appendChild(this.stopCountingDiv);
+
+    this.subtaskPage.appendChild(this.subtaskContainer);
+    this.subtaskPage.appendChild(this.statusContainer);
     this.subtaskPage.appendChild(this.timeContainer);
-
-
-    this.counterDiv = div;
-    this.startCounterDiv = div;
-    this.startCounterIcon = img;
-    this.startCounterIcon.setAttribute('id', 'startCounter');
-    this.startCounterIcon.setAttribute('src', '/src/img/info.svg');
-    this.counterDiv.appendChild(this.counterDiv);
-
-    this.countingDiv = div;
-    this.countingDiv.classList.add('isClosed');
-    this.countingText = p;
-    this.countingText.innerText = this.counting;
-    this.stopCountingDiv = div;
-    this.stopCountingIcon = img;
-    this.stopCountingIcon.setAttribute('id', '/src/img/info.svg');
-    this.stopCountingIcon.setAttribute('id', 'stopCounting');
-    this.counterDiv.appendChild(this.countingDiv);
+    this.subtaskPage.appendChild(this.counterDiv);
     return this.subtaskPage;
   }
 }

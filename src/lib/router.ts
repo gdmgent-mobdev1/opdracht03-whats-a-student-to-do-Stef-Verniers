@@ -3,10 +3,18 @@ import {
   HomeComponent, LoginComponent, RegisterComponent, NewTaskComponent,
 } from '../Components';
 import Task from '../Components/Pages/Project';
+import Subtask from '../Components/Pages/Subtask';
 
 const id: any = sessionStorage.getItem('projectId');
 const name: any = sessionStorage.getItem('projectName');
 const deadline: any = sessionStorage.getItem('projectDeadline');
+
+const subId: any = sessionStorage.getItem('taskId');
+const subName: any = sessionStorage.getItem('taskName');
+const subFinish: any = sessionStorage.getItem('taskFinish');
+const subPend: any = sessionStorage.getItem('taskPend');
+const subSpend: any = sessionStorage.getItem('taskSpend');
+const subTimer: any = sessionStorage.getItem('taskTimer');
 
 const Router = () => {
   const login = new LoginComponent();
@@ -14,6 +22,7 @@ const Router = () => {
   const home = new HomeComponent();
   const newTask = new NewTaskComponent();
   const task = new Task(id, name, deadline);
+  const subtaskPage = new Subtask(subId, subName, subFinish, subPend, subSpend, subTimer);
   const appContainer = document.querySelector<HTMLDivElement>('#app')!;
   const check = sessionStorage.getItem('user');
 
@@ -39,6 +48,13 @@ const Router = () => {
     if (check) {
       appContainer.appendChild(task.render());
       appContainer.appendChild(newTask.render());
+    } else {
+      window.location.replace('/login');
+    }
+  }).resolve();
+  router.on('/subtask/:id', () => {
+    if (check) {
+      appContainer.appendChild(subtaskPage.render());
     } else {
       window.location.replace('/login');
     }

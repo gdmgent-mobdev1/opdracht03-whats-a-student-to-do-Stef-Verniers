@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
@@ -19,7 +20,7 @@ import {
 } from '@firebase/auth';
 import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
-  writeBatch, Timestamp, setDoc, addDoc, onSnapshot, DocumentData,
+  writeBatch, Timestamp, setDoc, addDoc, onSnapshot, DocumentData, updateDoc,
 } from 'firebase/firestore';
 import Card from '../Components/Project/Card';
 import { convertFirebaseDate } from './functions';
@@ -206,13 +207,13 @@ const getAmountOfProjects = async () => {
 
 const returnProjects = async () => {
   const list = await document.querySelector<HTMLDivElement>('#projectList');
-  
   const getMyProjects = query(collection(db, 'projects'), where(`${myUID}.uid`, '==', `${myUID}`));
   const projects = await getDocs(getMyProjects);
-  
   const projectsUsersPromise = projects.docs.map(async (doc: any) => {
     const users = await getCountFromServer(collection(db, `projects`));
     const id = doc.id;
+    console.log(id);
+    
     const { name, description } = doc.data();
     const thisDate = convertFirebaseDate(doc.data().deadline);
     return {
@@ -273,7 +274,6 @@ const returnProjects = async () => {
 const createProject = async (e: any) => {
   const newName = document.querySelector<HTMLInputElement>('#newName')!.value;
   const newDate = document.querySelector<HTMLInputElement>('#newDate')!.value;
-  
   const newDescription = document.querySelector<HTMLInputElement>('#newDescription')?.value;
   const username = auth.currentUser?.displayName;
   e.preventDefault();
@@ -298,9 +298,8 @@ const returnSubtasks = async () => {
   const list = document.querySelector('#taskList');
   const listItem = document.querySelector('#listItem');
   const projectId = sessionStorage.getItem('projectId');
-  const subtasks = collection(db, `projects/${projectId}/subtasks`);
+  const subtasks = collection(db, `subtasks`);
   const getSubTask = await getDocs(subtasks);
-  
   if (!getSubTask) {
     list!.innerHTML = `
     <h4>No current Subtasks</h4>
@@ -315,25 +314,46 @@ const returnSubtasks = async () => {
     item.render();
   });
 
+  const icons = document.querySelectorAll('.arrow');
+  for (let i = 0; i < icons.length; i++) {
+    const icon = icons[i];
+    icon.addEventListener('click', (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const taskId = `${icon.getAttribute('id')}`;
+      const thisArrow = document.querySelector(`#extend-${taskId}`);
+      console.log(icon);
+      thisArrow?.classList.toggle('openMargin');
+    });
+  }
+  console.log(icons);
+  
+
+
   const tasks = document.querySelectorAll('.subtaskItem');
+  console.log(tasks);
+  
 
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];
     console.log(task);
-    task.addEventListener('click', async (e: any) => {
-      if (e && e.stopPropagation) e.stopPropagation(); 
+    task.addEventListener('click', async () => {
       const taskId = `${task.getAttribute('id')}`;
       console.log(taskId);
       const getMyDoc = doc(db, 'subtasks', taskId);
-      const docs = await getDoc(getMyDoc);
-      const id = docs.id;
-      console.log(docs.data());      
-      // const { name, deadline }: any = myDoc.data();
-      // const thisDate = convertFirebaseDate(deadline);
-      // sessionStorage.setItem('taskId', id);
-      // sessionStorage.setItem('taskName', name);
-      // sessionStorage.setItem('taskDeadline', thisDate);
-      // window.location.href = `/subtask/${id}`;
+      const myDoc = await getDoc(getMyDoc);
+      const id = myDoc.id;
+      console.log(myDoc.data());      
+      const {
+        title, description, finished, pending, timeSpent, timer, 
+      }: any = myDoc.data();
+      sessionStorage.setItem('taskId', id);
+      sessionStorage.setItem('taskName', title);
+      sessionStorage.setItem('taskDescription', description);
+      sessionStorage.setItem('taskFinish', finished);
+      sessionStorage.setItem('taskPend', pending);
+      sessionStorage.setItem('taskSpend', timeSpent);
+      sessionStorage.setItem('taskTimer', timer);
+      window.location.href = `/subtask/${id}`;
     });
   }
 };
@@ -360,9 +380,65 @@ const createSubtask = async (e: any) => {
   window.location.reload();
 };
 
+const stopWatch = (): { start: () => void, end: () => void } => {
+  let startTime: any;
+  let endTime: any;
+  return {
+    start: () => {
+      startTime = Date.now();
+      function update() {
+        const counter = document.getElementById('timerText')!;
+        const elapsedTime = Date.now() - startTime;
+        const elapsedMinutes = Math.floor(elapsedTime / 60000);
+        const elapsedHours = Math.floor(elapsedMinutes / 60);
+        const thisTime = String(elapsedHours);
+        thisTime.toString();
+        console.log(thisTime);
+        if (elapsedHours < 10 && elapsedMinutes < 10) {
+          counter.innerText = `0${elapsedHours.toString()}:0${elapsedMinutes % 60}`; 
+        } else {
+          counter.innerText = `0${elapsedHours.toString()}:0${elapsedMinutes % 60}`; 
+        }
+        console.log(elapsedHours);
+      }
+      setInterval(update, 1000);
+    },
+    end: () => {
+      endTime = Date.now();
+      const elapsedTime = endTime - startTime;
+      const elapsedMinutes = Math.floor(elapsedTime / 60000);
+      const elapsedHours = Math.floor(elapsedMinutes / 60);
+      const thisTime = `${elapsedHours}:${elapsedMinutes % 60}`;
+      thisTime.toString();
+      console.log(thisTime);
+      const docId = sessionStorage.getItem('taskId');
+      console.log(docId);
+      
+      const washingtonRef = doc(db, "subtasks", `${docId}`);
+      updateDoc(washingtonRef, {
+        timeSpent: `0${elapsedHours.toString()}:0${elapsedMinutes % 60}`,
+      });
+    },
+  };
+};
+
+window.setTimeout(() => {
+  const timer = stopWatch();
+  const counter = document.querySelector('#subTaskCounter')!;
+  const start = document.querySelector('#startCounting');
+  const stop = document.querySelector('#stopCounting');
+  console.log(stop);
+  
+  start!.addEventListener('click', () => {
+    timer.start();
+  });
+  stop!.addEventListener('click', () => {
+    timer.end();
+  });
+}, 100);
 
 
 export {
   app, auth, userCred, onAuthStateChanged, registerUser, loginUser, logoutUser, google, updateDashboard,
-  getAmountOfProjects, returnProjects, createProject, returnSubtasks, createSubtask,
+  getAmountOfProjects, returnProjects, createProject, returnSubtasks, createSubtask, stopWatch,
 };

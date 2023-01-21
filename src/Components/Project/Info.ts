@@ -1,5 +1,3 @@
-import { Timestamp } from '@firebase/firestore';
-
 export default class Info {
   id: string;
 
