@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Component from '../lib/Component';
-import Header from './Header';
+import Component from '../../lib/Component';
+import Header from '../Header';
 // import Elements from '../lib/Elements';
 
 class HomeComponent extends Component {

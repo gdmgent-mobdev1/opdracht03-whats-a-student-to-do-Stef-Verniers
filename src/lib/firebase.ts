@@ -19,14 +19,15 @@ import {
 } from '@firebase/auth';
 import {
   doc, getDoc, getDocs, getFirestore, collection, query, collectionGroup, where, getCountFromServer,
-  writeBatch, Timestamp, setDoc, addDoc, onSnapshot,
+  writeBatch, Timestamp, setDoc, addDoc, onSnapshot, DocumentData,
 } from 'firebase/firestore';
-import Card from '../Components/Card';
+import Card from '../Components/Project/Card';
 import { convertFirebaseDate } from './functions';
-import Info from '../Components/Info';
-import Task from '../Components/Task';
+import Info from '../Components/Project/Info';
+import Task from '../Components/Pages/Project';
 import Header from '../Components/Header';
-import ListItem from '../Components/listItem';
+import ListItem from '../Components/Subtask/listItem';
+import CountdownTimer from '../Components/Countdown';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -63,28 +64,22 @@ const registerUser = (e: any) => {
   if (newError) {
     sessionStorage.removeItem('error');
   }
-
-  const nameUser = (<HTMLInputElement>document.querySelector('input[name="username"]'))!.value;
-  const username = (<HTMLInputElement>document.querySelector('input[name="usermail"]'))!.value;
-  const password = (<HTMLInputElement>document.querySelector('input[name="password"]'))!.value;
-
-  createUserWithEmailAndPassword(auth, username, password)
-    .then((userCredential) => {
+  const username = document.querySelector<HTMLInputElement>('input[name="username"]')!.value;
+  const useremail = document.querySelector<HTMLInputElement>('input[name="usermail"]')!.value;
+  const password = document.querySelector<HTMLInputElement>('input[name="password"]')!.value;
+  createUserWithEmailAndPassword(auth, useremail, password)
+    .then(async (userCredential) => {
     // Signed in
       const { user } = userCredential;
-      console.log(user);
       sessionStorage.setItem('user', String(user.uid));
-      setDoc(doc(db, "users", `${user.uid}`), {
-        name: nameUser,
-        email: username,
-        uid: user.uid,
+      await setDoc(doc(db, "users", user.uid), {
+        name: `${username}`,
+        email: `${useremail}`,
+        uid: `${user.uid}`,
       });
-      window.location.replace('/home');
-    })
-    .catch((error) => {
-      const errorMessage = error.message;
-      sessionStorage.setItem('error', String(errorMessage));
-      window.location.reload();
+      if (user) {
+        window.location.href = '/home';
+      }  
     });
 };
 
@@ -96,7 +91,6 @@ const loginUser = (e: any) => {
     .then((userCredential) => {
     // Signed in
       const { user } = userCredential;
-      
       sessionStorage.setItem('user', String(user.uid));
       window.location.replace('/home');
     })
@@ -112,19 +106,20 @@ const userCred = () => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const { uid } = user;
-      const getMyDoc = doc(db, 'users', user.uid);
-      const myDoc = await getDoc(getMyDoc);
-      const { name, email } = myDoc.data();
+      const docRef = doc(db, 'users', `${uid}`);
+      const docSnap = await getDoc(docRef);
+      const userDoc = docSnap.data();
+      const { name }: any = userDoc;
       const userPlaceholder = document.querySelector<HTMLHeadElement>('#dashBoardName');
-      console.log(name);
-      const header = new Header(user.displayName);
+      const header = new Header(name);
       body.insertBefore(header.render(), appContainer);
       const displaynamePlaceholder = document.querySelector<HTMLInputElement>('#displaynameInput');
       if (user.displayName !== null) {
         if (userPlaceholder) header.render();
-        if (userPlaceholder) userPlaceholder.setAttribute('value', `${name}`);
+        if (userPlaceholder) userPlaceholder.setAttribute('value', `${user.displayName}`);
       } else {
-        userPlaceholder!.innerHTML = `Welcome ${name}`;
+        console.log(name);
+        userPlaceholder!.innerText = `Welcome ${uid}`;
         displaynamePlaceholder!.setAttribute('value', `${uid}`);
         userPlaceholder!.style.fontSize = '1.6rem';
       }
@@ -144,11 +139,6 @@ const google = (e:any) => {
       // The signed-in user info.
       const { user } = result;
       sessionStorage.setItem('user', String(user.uid));
-      setDoc(doc(db, "users", `${user.uid}`), {
-        name: user.email,
-        email: user.email,
-        uid: user.uid,
-      });
       window.location.replace('/home');
     // ...
     }).catch((error: any) => {
@@ -234,6 +224,9 @@ const returnProjects = async () => {
 
   projectsUsers.forEach(async (project: any) => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
+    // const timer = new CountdownTimer(project.thisDate);
+    // timer.start();
+    console.log(project.thisDate);
     if (list) list.appendChild(card.render());
   });
 
@@ -251,11 +244,11 @@ const returnProjects = async () => {
       const getMyDoc = doc(db, 'projects', cardId);
       const myDoc = await getDoc(getMyDoc);
       const id = myDoc.id;
-      const { name, description, users } = myDoc.data();
-      const thisDate = convertFirebaseDate(myDoc.data().deadline);
-      sessionStorage.setItem('id', id);
-      sessionStorage.setItem('name', name);
-      sessionStorage.setItem('deadline', thisDate);
+      const { name, deadline }: any = myDoc.data();
+      const thisDate = convertFirebaseDate(deadline);
+      sessionStorage.setItem('projectId', id);
+      sessionStorage.setItem('projectName', name);
+      sessionStorage.setItem('projectDeadline', thisDate);
       const task = new Task(id, name, thisDate);
       window.location.href = `/project/${id}`;
     });
@@ -268,11 +261,12 @@ const returnProjects = async () => {
     const element = icons[i];
     element.addEventListener('click', async (e) => {
       if (e && e.stopPropagation) e.stopPropagation(); 
-      const cardId = `${element.getAttribute('id')}`;
+      const cardId = `${element.getAttribute('projectId')}`;
       const getMyDoc = doc(db, 'projects', cardId.slice(5));
       const myDoc = await getDoc(getMyDoc);
+      console.log(myDoc.data());
       const id = myDoc.id;
-      const { name, description, users } = myDoc.data();
+      const { name, description, users }:any = myDoc.data();
       const thisDate = convertFirebaseDate(myDoc.data()?.deadline);
       const info = new Info(name, thisDate, description, users, id);
       return info.render();
@@ -307,8 +301,7 @@ const createProject = async (e: any) => {
 const returnSubtasks = async () => {
   const list = document.querySelector('#taskList');
   const listItem = document.querySelector('#listItem');
-  const projectId = sessionStorage.getItem('id');
-  console.log(projectId);
+  const projectId = sessionStorage.getItem('projectId');
   const subtasks = collection(db, `projects/${projectId}/subtasks`);
   const getSubTask = await getDocs(subtasks);
   
@@ -317,19 +310,40 @@ const returnSubtasks = async () => {
     <h4>No current Subtasks</h4>
     `;
   }
-  getSubTask.forEach(async (doc) => {
+  getSubTask.forEach((doc) => {
     console.log(doc.data());
-    
     const {
       title, finished, description, user, timeSpent, 
     } = doc.data();
     const item = new ListItem(doc.id, title, finished, description, user, timeSpent);
     item.render();
   });
+
+  const tasks = document.querySelectorAll('.subtaskItem');
+
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
+    console.log(task);
+    task.addEventListener('click', async (e: any) => {
+      if (e && e.stopPropagation) e.stopPropagation(); 
+      const taskId = `${task.getAttribute('id')}`;
+      console.log(taskId);
+      const getMyDoc = doc(db, 'subtasks', taskId);
+      const docs = await getDoc(getMyDoc);
+      const id = docs.id;
+      console.log(docs.data());      
+      // const { name, deadline }: any = myDoc.data();
+      // const thisDate = convertFirebaseDate(deadline);
+      // sessionStorage.setItem('taskId', id);
+      // sessionStorage.setItem('taskName', name);
+      // sessionStorage.setItem('taskDeadline', thisDate);
+      // window.location.href = `/subtask/${id}`;
+    });
+  }
 };
 
 const createSubtask = async (e: any) => {
-  const projectId = sessionStorage.getItem('id');
+  const projectId = sessionStorage.getItem('projectId');
   console.log(projectId);
 
   const taskName = document.querySelector<HTMLInputElement>('#newSubtaskName')?.value;

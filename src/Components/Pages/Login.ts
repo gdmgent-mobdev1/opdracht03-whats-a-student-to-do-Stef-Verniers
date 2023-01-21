@@ -1,4 +1,4 @@
-import Component from '../lib/Component';
+import Component from '../../lib/Component';
 // import app from '../lib/firebase';
 // import Elements from '../lib/Elements';
 

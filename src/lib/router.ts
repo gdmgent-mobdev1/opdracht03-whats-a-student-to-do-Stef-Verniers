@@ -2,11 +2,11 @@ import Navigo from 'navigo';
 import {
   HomeComponent, LoginComponent, RegisterComponent, NewTaskComponent,
 } from '../Components';
-import Task from '../Components/Task';
+import Task from '../Components/Pages/Project';
 
-const id = sessionStorage.getItem('id');
-const name = sessionStorage.getItem('name');
-const deadline = sessionStorage.getItem('deadline');
+const id: any = sessionStorage.getItem('projectId');
+const name: any = sessionStorage.getItem('projectName');
+const deadline: any = sessionStorage.getItem('projectDeadline');
 
 const Router = () => {
   const login = new LoginComponent();
@@ -30,7 +30,7 @@ const Router = () => {
   }).resolve();
   router.on('/home', async () => {
     if (check) {
-      await appContainer.appendChild(home.render());
+      appContainer.appendChild(home.render());
     } else {
       window.location.replace('/login');
     }

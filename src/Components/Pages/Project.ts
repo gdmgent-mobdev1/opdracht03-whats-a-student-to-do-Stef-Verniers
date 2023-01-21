@@ -1,3 +1,5 @@
+import CountdownTimer from '../Countdown';
+
 export default class Task {
   id: string;
 
@@ -50,7 +52,6 @@ export default class Task {
 
   render() {
     this.p = document.createElement('p');
-
     this.task = document.createElement('div');
     this.task.setAttribute('id', 'thisTask');
 

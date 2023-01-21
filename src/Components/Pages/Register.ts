@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Component from '../lib/Component';
-import { app } from '../lib/firebase';
+import Component from '../../lib/Component';
+import { app } from '../../lib/firebase';
 // import Elements from '../lib/Elements';
 
 class RegisterComponent extends Component {

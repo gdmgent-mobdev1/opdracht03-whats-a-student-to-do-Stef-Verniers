@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Component from '../lib/Component';
+import Component from '../../lib/Component';
 // import Elements from '../lib/Elements';
 
 class NewTaskComponent extends Component {

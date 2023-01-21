@@ -16,7 +16,7 @@ import {
 import {
   todaysDate,
 } from './lib/functions';
-import Info from './Components/Info';
+import Info from './Components/Project/Info';
 import Router from './lib/router';
 import Header from './Components/Header';
 
