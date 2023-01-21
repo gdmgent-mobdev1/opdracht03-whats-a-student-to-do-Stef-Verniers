@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://gdmgent-mobdev1.github.io/opdracht03-whats-a-student-to-do-Stef-Verniers/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
