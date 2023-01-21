@@ -1,5 +1,3 @@
-import CountdownTimer from '../Countdown';
-
 export default class Task {
   id: string;
 

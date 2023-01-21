@@ -27,7 +27,6 @@ import Info from '../Components/Project/Info';
 import Task from '../Components/Pages/Project';
 import Header from '../Components/Header';
 import ListItem from '../Components/Subtask/listItem';
-import CountdownTimer from '../Components/Countdown';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -224,9 +223,6 @@ const returnProjects = async () => {
 
   projectsUsers.forEach(async (project: any) => {
     const card = new Card(project.name, project.thisDate, project.users, project.id);
-    // const timer = new CountdownTimer(project.thisDate);
-    // timer.start();
-    console.log(project.thisDate);
     if (list) list.appendChild(card.render());
   });
 
@@ -261,7 +257,7 @@ const returnProjects = async () => {
     const element = icons[i];
     element.addEventListener('click', async (e) => {
       if (e && e.stopPropagation) e.stopPropagation(); 
-      const cardId = `${element.getAttribute('projectId')}`;
+      const cardId = `${element.getAttribute('id')}`;
       const getMyDoc = doc(db, 'projects', cardId.slice(5));
       const myDoc = await getDoc(getMyDoc);
       console.log(myDoc.data());
