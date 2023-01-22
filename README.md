@@ -11,5 +11,5 @@ Het is niet eenvoudig geweest om een tweede met een derdejaar te combineren. Ik 
 * uuid voor unieke id's aan te maken.
 
 ## Linkje naar mijn github Pages:
-https://gdmgent-mobdev1.github.io/opdracht03-whats-a-student-to-do-Stef-Verniers/
+https://opus-9174b.web.app/
 
